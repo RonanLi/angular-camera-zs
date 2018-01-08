@@ -1,0 +1,47 @@
+<headBox></headBox>
+<div class="container-fluid row">
+  <div class="col-sm-3 col-md-3 col-lg-2 sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+  <div class="col-sm-9 col-md-9 col-lg-10 main">
+    <div class="account">
+      <h3 class="title">用户分析</h3>
+
+
+
+
+      <div class="deviceTab" role="navigation">
+        <ul class="nav nav-tabs">
+          <li role="presentation" [ngClass]='{active:activeTab==0}' (click)=' activeTab=0 '><a href="javascript:;" >用户数量</a></li>
+          <li role="presentation" [ngClass]='{active:activeTab==1}' (click)=' activeTab=1 '><a href="javascript:;">用户属性</a></li>
+        </ul>
+      </div>
+
+      <div  *ngIf=' activeTab==0 ' class="table-responsive">
+        <div class="data row">
+          <p class="col-sm-12 col-md-12 col-lg-12">今日关键统计 </p>
+          <div class="col col-sm-4 col-md-4 col-lg-4"><p>用户总人数</p> <h4>{{todayNum.totalSize}}</h4></div>
+          <div class="col col-sm-4 col-md-4 col-lg-4"><p>新增人数</p> <h4>{{todayNum.yesterDaySize}}</h4></div>
+          <div class="col col-sm-4 col-md-4 col-lg-4"><p>活跃</p> <h4>{{todayNum.totalSize}}</h4></div>
+        </div>
+        <div class="deviceTab" role="navigation">
+          <ul class="nav nav-tabs">
+            <li role="presentation" [ngClass]='{active:chartTab==3}' (click)=' chartTab=3 '><a href="javascript:;" >新增人数</a></li>
+            <li role="presentation" [ngClass]='{active:chartTab==4}' (click)=' chartTab=4 '><a href="javascript:;" >活跃人数</a></li>
+            <li role="presentation" [ngClass]='{active:chartTab==5}' (click)=' chartTab=5 '><a href="javascript:;">总人数</a></li>
+          </ul>
+        </div>
+        <div *ngIf=' chartTab==3 ' echarts [options]="newOption" class="echartsStyle"></div>
+        <div *ngIf=' chartTab==4 ' echarts [options]="activeOption" class="echartsStyle"></div>
+        <div *ngIf=' chartTab==5 ' echarts [options]="allOption" class="echartsStyle"></div>
+      </div>
+      <div  *ngIf=' activeTab==1 ' class="table-responsive">
+        <!--<div echarts [options]="allOption" class="echartsStyle"></div>-->
+        <div echarts [options]="mapOption"  class="echartsStyle"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footBox></footBox>

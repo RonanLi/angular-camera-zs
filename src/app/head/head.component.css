@@ -1,0 +1,19 @@
+*{margin:0 ;padding:0;}
+
+.head{width:100%;height:50px;margin:auto;padding:0 1%;background:#fff;}
+.logo{display:inline-block;width:36px;height:36px;margin-right:10px;}
+.headL{float:left;line-height: 50px;}
+.headR{float:right;}
+.userImg{display: inline-block;width:20px;height:20px;margin-top:15px;vertical-align: middle;}
+.user{width:120px;height:50px;line-height: 50px;margin-left:10px; text-decoration: none;color:#333;}
+.arrow{line-height:50px;margin-left:10px;}
+.arrow:before{content: "\25b2";}
+.arrow.on:before{content: "\25bc";}
+.headList{position: relative;}
+.headList ul{position: absolute;width:85%;top:40px;left:0;text-align:center;list-style: none;z-index: 999;background:#fefefe;}
+.headList ul li>a{line-height:25px;color:#666;}
+.headList ul li>a:hover{color:#00C7B3;}
+
+.btn{ display: inline-block; width:24px;height:24px;margin-left: 10px;  vertical-align: middle; background:#f6f8f9 url("../../assets/imgs/menu_icon.png")no-repeat center; }
+
+

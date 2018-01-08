@@ -1,0 +1,19 @@
+<header class="head">
+  <div class="headL">
+    <img class="logo" src="../../assets/imgs/logo.png">甜园智能开发服务平台
+    <b  class='btn' (click)="bodyAdd()"></b>
+  </div>
+
+  <div class="headR">
+    <img class="userImg headL" src="../../assets/imgs/user_icon.png" alt="">
+    <div class="headList headR">
+      <a  class="user headL"  href="javascript:;" (click)="this.show = !this.show;">{{userData.appName}}<i class="arrow" [ngClass]="{on:this.show}"></i></a>
+      <ul *ngIf='show'>
+        <li><a href="/setup/account">账号信息</a></li>
+        <li><a href="">安全设置</a></li>
+        <li (click)="logout()"><a >退出</a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+

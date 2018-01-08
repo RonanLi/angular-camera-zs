@@ -1,0 +1,113 @@
+<headBox></headBox>
+<div class="container-fluid row">
+  <div class="col-sm-3 col-md-3 col-lg-2 sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+
+  <div class="col-sm-9  col-md-9 col-lg-10 main">
+    <div class="account">
+      <h3 class="title">产品列表（拖拽列表）</h3>
+      <div class="panel panel-default">
+        <ul class="list-group">
+          <li class="list-group-item borderBN productListB">
+            <div>产品类别 <span>20个</span></div>
+          </li>
+        </ul>
+        <!--<ul class="list-group productListC">
+          <li class="list-group-item">
+            <div class="productBook pointer">
+              <img class="productBigI" src="" alt="">
+              <span>智能网关</span>
+              <b>^</b>
+              <a> 添加 <i>+</i></a>
+            </div>
+            <ul class="list-group productSub">
+              <li class="list-group-item">
+                <div class="productBook">
+                  <img class="productBigI" src="" alt="">
+                  <span>智能网关</span>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="productBook">
+                  <img class="productBigI" src="" alt="">
+                  <span>智能网关</span>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="productBook">
+                  <img class="productBigI" src="" alt="">
+                  <span>智能网关</span>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="productBook">
+                  <img class="productBigI" src="" alt="">
+                  <span>智能网关</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li class="list-group-item">
+            <div class="productBook pointer">
+              <img class="productBigI" src="" alt="">
+              <span>智能网关</span>
+              <b>^</b>
+              <a> 添加 <i>+</i></a>
+            </div>
+            <ul class="list-group productSub">
+              <li class="list-group-item">
+                <div class="productBook">
+                  <img class="productBigI" src="" alt="">
+                  <span>智能网关</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li class="list-group-item">
+            <div class="productBook pointer">
+              <img class="productBigI" src="" alt="">
+              <span>智能网关</span>
+              <b>^</b>
+              <a> 添加 <i>+</i></a>
+            </div>
+            <ul class="list-group productSub">
+              <li class="list-group-item">
+                <div class="productBook">
+                  <img class="productBigI" src="" alt="">
+                  <span>智能网关</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>-->
+
+
+        <ul class="list-group productListC">
+          <li class="list-group-item" *ngFor="let list of productListData;let i=index" (click)="list.isShow=!list.isShow">
+            <div class="productBook pointer"><img class="productBigI" src="{{list.categoryAvatar}}" alt=""> <span>{{list.annotation}}</span><span>{{list.versionLimit}}</span> <b [ngClass]="{down:list.isShow}"></b> <a *ngIf="list.isShow" > 添加 <i>+</i></a> </div>
+            <ul class="list-group productSub" *ngIf="list.isShow">
+              <li class="list-group-item" *ngFor="let sub of list.childrenList;">
+                <div class="productBook">
+                  <img class="productBigI" src="{{sub.actualPicture}}" alt="">
+                  <span>{{sub.annotation}}</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footBox></footBox>
+
+
+
+
+
+
+

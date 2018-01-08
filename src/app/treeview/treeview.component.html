@@ -1,0 +1,57 @@
+<aside class="main-sidebar" [ngClass]="{sliderSmall:this.slider}">
+  <!--<section class="sidebar">-->
+    <ul class="sidebar-menu">
+      <li class="treeview" [ngClass]="{'active':this.isindex}" (click)="this.isindex=!this.isindex">
+        <a routerLink="/index"> <i class="fa fa-dashboard"></i> <span>首页</span> </a>
+      </li>
+
+      <li class="treeview" [ngClass]="{'active':this.isEoms}" (click)="this.isEoms=!this.isEoms">
+        <a> <i class="fa fa-eoms"></i> <span>运维系统</span> <i class="fa fa-angle-left pull-right"></i> </a>
+        <ul class="treeview-menu" [hidden]="!this.isEoms">
+          <li><a routerLink="/eoms/userList" routerLinkActive="on">用户列表</a></li>
+          <li><a routerLink="/eoms/deviceList" routerLinkActive="on">设备列表</a></li>
+          <li><a routerLink="/eoms/productList" routerLinkActive="on">产品列表</a></li>
+        </ul>
+      </li>
+      <li class="treeview" [ngClass]="{'active':this.isPro}" (click)="this.isPro=!this.isPro">
+        <a> <i class="fa fa-problem"></i> <span>问题排查追踪</span> <i class="fa fa-angle-left pull-right"></i> </a>
+        <ul class="treeview-menu" [hidden]="!this.isPro">
+          <li><a routerLink="">第一个D3效果</a></li>
+          <li><a routerLink="">双折线加点</a></li>
+          <li><a routerLink="">选项 V3</a></li>
+          <li><a routerLink="">画中国地图</a></li>
+          <li><a routerLink="">选项 V5</a></li>
+          <li><a routerLink="">选项 V6</a></li>
+          <li><a routerLink="">选项 V7</a></li>
+        </ul>
+      </li>
+      <li class="treeview" [ngClass]="{'active':this.isChart}" (click)="this.isChart=!this.isChart">
+        <a> <i class="fa fa-chart"></i> <span>统计分析</span> <i class="fa fa-angle-left pull-right"></i> </a>
+        <ul class="treeview-menu" [hidden]="!this.isChart">
+          <li><a routerLink="/charts/userChart" routerLinkActive="on">用户分析</a></li>
+          <li><a routerLink="/charts/deviceChart" routerLinkActive="on">设备分析</a></li>
+          <li><a routerLink="/charts/productChart" routerLinkActive="on">产品分析</a></li>
+        </ul>
+      </li>
+
+      <li class="treeview" [ngClass]="{'active':this.isSys}" (click)="this.isSys=!this.isSys">
+        <a> <i class="fa fa-system"></i> <span>系统管理模块</span> <i class="fa fa-angle-left pull-right"></i> </a>
+        <ul class="treeview-menu" [hidden]="!this.isSys">
+          <li><a routerLink="">模块管理</a></li>
+          <li><a routerLink="">页面管理</a></li>
+          <li><a routerLink="">用户组管理</a></li>
+          <li><a routerLink="">系统用户管理</a></li>
+        </ul>
+      </li>
+      <li class="treeview" [ngClass]="{'active':this.isSet}" (click)="this.isSet=!this.isSet">
+        <a> <i class="fa fa-manage"></i> <span>设置</span> <i class="fa fa-angle-left pull-right"></i> </a>
+        <ul class="treeview-menu" [hidden]="!this.isSet">
+          <li><a routerLink="/setup/account" routerLinkActive="on">账户信息设置</a></li>
+          <li><a routerLink="/setup/safe" routerLinkActive="on">安全设置</a></li>
+          <li><a routerLink="" routerLinkActive="on">系统内容订阅</a></li>
+        </ul>
+      </li>
+
+    </ul>
+  <!--</section>-->
+</aside>

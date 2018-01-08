@@ -1,0 +1,68 @@
+<headBox></headBox>
+<div class="container-fluid row">
+  <div class="col-sm-3 col-md-3 col-lg-2 sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+
+  <div class="col-sm-9 col-md-9 col-lg-10 main">
+    <div class="account">
+      <h3 class="title">账户信息</h3>
+      <div class="panel panel-default">
+        <ul class="list-group">
+          <li class="list-group-item borderBN userAccountB">
+            <div>基本资料</div>
+          </li>
+        </ul>
+        <ul class="list-group userAccountC">
+          <li class="list-group-item">
+            <div>头像</div>
+            <div class=""><img src="{{userData.appAvatar}}" alt=""></div>
+          </li>
+          <li class="list-group-item">
+            <div>账号ID</div>
+            <div>{{userData.appId}}</div>
+          </li>
+          <li class="list-group-item">
+            <div>账号名称</div>
+            <div>{{userData.appName}}</div>
+          </li>
+          <li class="list-group-item">
+            <div>手机号</div>
+            <div>{{userData.phone}}</div>
+            <div class="phonebind">
+              <span (click)="modify=!modify">{{userData['phone']?'修改':'绑定'}}</span>
+            </div>
+            <!--绑定手机号-->
+            <div *ngIf="modify" class="modify">
+              <h3>{{modify?'修改手机号码':'绑定手机号码'}} <i class="modifyClose" (click)="modify=!modify">X</i></h3>
+              <form #form="ngForm" (ngSubmit)="form.form.valid && submitN(form.value)" novalidate  role="form" class="form">
+                <div class="form-group ">
+                  <div>
+                    <input required type="text" name="newphone" [(ngModel)]="user.newphone" #newphone="ngModel"  placeholder="{{modify?'请输入新手机号码':'请输入绑定手机号码'}}" autocomplete="off">
+                    <input class="short" type="button" name="sendCode" value="{{codeMark?'发送验证码':'请稍后'}}" (click)="sendCode()" [disabled]="!codeMark">
+                    <div  *ngIf="form.submitted && !newphone.valid"  class="text-danger">手机号码不能为空！</div>
+                  </div>
+                </div>
+                <div class="form-group ">
+                  <div class="codeBox clearfix">
+                    <input required type="text" name="randomCode" [(ngModel)]="user.randomCode" #randomCode="ngModel" placeholder="请输入验证码" autocomplete="off">
+                    <div *ngIf='form.submitted && (!(sendcode==user.randomCode)||!randomCode.valid)' class="text-danger">验证码有误</div>
+                  </div>
+                </div>
+                <input type="submit" value="确定" class="btn btn-info" [disabled]="!newphone.valid||!randomCode.valid||!mark"/>
+              </form>
+            </div>
+          </li>
+          <li class="list-group-item">
+          <div>邮箱地址</div>
+          <div>{{userData.email}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footBox></footBox>
+<div>{{count}}</div>

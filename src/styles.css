@@ -1,1 +1,100 @@
-/* You can add global styles to this file, and also import other style files */
+*{margin:0;padding:0;list-style: none;font-size: 14px;}
+html body{background-color:#f6f8f9;}
+.container-fluid.row{margin:0;padding:0}
+/*.sidebar{background:#00bbd1;}*/
+.main>div{padding:3%;}
+.main .title{margin-bottom:3%;}
+
+.searchBox.row{width:100%;margin:0 0 3% 0;}
+.searchBox .search{padding:0;}
+.searchIpt{border:1px solid #aaa;}
+.search{padding-left:2%;outline: medium;}
+.searchBg{height:34px;vertical-align: middle;background: transparent;}
+.searchBox>p{font-size: 18px;}
+.select{ width:100px; font-size: 14px; line-height: 32px; height: 32px; background: #fff; color:#666; }
+
+.table-responsive.device{overflow: visible;}
+.table{position: relative;}
+
+/*设备列表Tab切换*/
+.deviceTab{margin:2% 0;}
+.nav-tabs a{color:#333;}
+.data{margin-bottom:5%;border:1px solid #efefef;background: #fff;}
+
+/*用户列表*/
+.list-group .list-group-item{padding:0;}
+.list-group-item.borderBN{border-bottom:none;}
+.userListB>div,.userListC .list-group-item>div,.deviceListB>div,.deviceListC .list-group-item>div>div,.userAccountB>div,.userAccountC .list-group-item>div{float: left;}
+.userListB>div,.userListC .list-group-item>div{width:18%;height:6rem;line-height: 6rem;text-align: center;}
+.userListB>div{border-left:1px solid rgba(0,0,0,.125);}
+.list-group-item>div{color:#666;}
+.userListB .userListImg,.userListC .list-group-item .userListImg{width:10%;border:none;}
+.userListImg>img{display: block;width:4rem;height:4rem;margin:1rem auto;border:1px solid #000;}
+.userListState{padding-top:1rem;}
+.userListState>p,.userListState>div{line-height: 2rem;margin: 0;}
+.userListState>div>span{color:#666;}
+.userInline{display: initial;}
+
+.userListState .TV{background:url("./assets/imgs/tv.png")no-repeat center;}
+.userListState .PAD{background:url("./assets/imgs/pad.png")no-repeat center;}
+.userListState .IOS{background:url("./assets/imgs/phone.png")no-repeat center;}
+.userListState .IOS,.userListState .PAD,.userListState .TV{display: inline-block;width:1.5rem;height:1.5rem;margin:0 1%;vertical-align: middle;background-size: 100% 100%;}
+
+/*设备列表*/
+.deviceListB>div,.deviceListC .list-group-item>div>div{width:25%;height:6rem;line-height: 6rem;text-align: center;overflow: hidden;}
+.deviceListB>div{height:3rem;line-height: 3rem;}
+/*设备列表 产品详情*/
+.deviceListC .list-group-item{overflow: visible;}
+.deviceListC .list-group-item .deviceDetail{position: absolute;width:80%;height: auto;right:0;bottom:0;background:#fff;z-index: 9;text-align:left;border:1px solid #aaa;display: none;}
+.detailLeft{width:25%;float: left;}
+.detailLeft>img{display: block;width:100%;height:100%;border:1px solid #000;}
+.detailRight{width:75%;float: left;}
+.detailRightD{float: left;width:50%;padding: 2% 0 0 2%;border-left: 1px solid #efefef;}
+.detailRightD>p{line-height: 25px;}
+.detailRightD>p>b{display: inline-block;width:10rem;}
+.detailBottom{ float: left;width:100%;padding:0 2%;border-top:1px solid #efefef;border-left:1px solid #efefef;}
+.detailBottom>span{line-height: 35px;}
+.detailBottom>b{float: right;}
+.list-group-item:hover .deviceDetail{display: block;}
+.list-group-item.none{display: none;}
+/*产品列表*/
+.pointer{cursor: pointer;}
+.productBook{height:5rem;padding:1rem 2%;}
+.productBigI{display: inline-block;width:3rem;height:3rem;vertical-align: middle;border:1px solid #000;}
+.productBook>span{margin-left: 3%;font-size: 16px;}
+.productBook>a{float: right;width:7rem;line-height: 2rem;margin:0.5rem 1rem;padding:0 1%;color:#333;border: 1px solid #aaa;border-radius: 5px;cursor: pointer;}
+.productBook>a>i{float: right;width:1.5rem;height:1.5rem;line-height: 1.4rem;margin-top:0.25rem;padding:0;font-size:1.5rem;text-align:center;font-style: normal;color:#fff;background:#aaa;border-radius: 50%;}
+.productBook>b{float: right;width:2rem;height:2rem;margin:0.5rem 0;background:#aaa;}
+.productBook .down{background:#eee;}
+.productBook>a:hover{background: #efefef;}
+/*.productListC .productSub{ display: none;}*/
+.productListC .productSub.on { display: block;}
+.productSub .productBook>span{font-size: 12px;}
+/*账户信息*/
+.userAccountB>div,.productListB>div{line-height: 3rem;padding-left: 1%;}
+.userAccountC .list-group-item>div{width:15%;line-height: 6rem;padding-left: 1%;}
+.userAccountC .list-group-item>div img{display: inline-block;width:4rem;height:4rem;border:1px solid #000;vertical-align: middle;}
+.userAccountC .list-group-item .phonebind{width: 70%;text-align: center; padding-right:1%;}
+/*菜单*/
+.sidebar{padding-top:2%;}
+.sidebar-collapse .sidebar{max-width:55px;min-height:400px;height:400px;margin-right: 5%;padding:2% 0 0 15px;background: #d2f3f0;}
+.sidebar-collapse  .treeview-menu{ position:absolute;width:180px;top:0;left:98%;background:#fcfcfc;z-index: 99; border:1px solid rgba(0,0,0,.125); border-radius: 5px;}
+.sidebar-collapse .treeview[_ngcontent-c3] > a[_ngcontent-c3]:hover{background-color:transparent; }
+.sidebar-collapse .treeview[_ngcontent-c3] > a[_ngcontent-c3] span[_ngcontent-c3],.sidebar-collapse .treeview[_ngcontent-c3]>a i.fa-angle-left[_ngcontent-c3]{display: none;}
+.sidebar-collapse .treeview-menu{display: none;}
+.sidebar-collapse .treeview[_ngcontent-c3]:hover .treeview-menu{display: block!important;}
+.sidebar-collapse .fa-dashboard[_ngcontent-c3]{background:url("./assets/imgs/index_iconG.png");}
+.sidebar-collapse .fa-eoms[_ngcontent-c3]{background: url("./assets/imgs/emos_iconG.png");}
+.sidebar-collapse .fa-chart[_ngcontent-c3]{background: url("./assets/imgs/chart_iconG.png");}
+.sidebar-collapse .fa-problem[_ngcontent-c3]{background: url("./assets/imgs/problem_iconG.png");}
+.sidebar-collapse .fa-system[_ngcontent-c3]{background: url("./assets/imgs/system_iconG.png");}
+.sidebar-collapse .fa-manage[_ngcontent-c3]{background: url("./assets/imgs/manage_iconG.png");}
+/*账户设置*/
+
+.userAccountC .list-group-item .modify{position: absolute;width:30%;line-height: 1rem;padding:0; bottom:0;left:35%;background: #fafafa;border:1px solid rgba(0,0,0,.125);border-radius: 5px;}
+.modify>h3{line-height:5rem;text-indent:2rem;border-bottom:1px solid #ccc;}
+.modify form{width:100%;padding:5%;}
+.modify input,.modify .form-group .text-danger{width:70%;height:35px;line-height: 35px;padding-left: 5px;}
+.modifyClose{float:right;margin-right:1rem;font-style: normal;font-size: 2rem;cursor: pointer;}
+.modify .short{width:28%;border: none;background:#afafaf;}
+.modify .btn{width:100%;line-height: 20px;cursor: pointer;}

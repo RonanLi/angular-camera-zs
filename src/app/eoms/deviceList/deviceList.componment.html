@@ -1,0 +1,158 @@
+<headBox></headBox>
+
+<div class="container-fluid row">
+  <div class="col-sm-3 col-md-3 col-lg-2 sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+
+  <div class="col-sm-9  col-md-9  col-lg-10 main">
+    <div class="account">
+      <h3 class="title">设备列表</h3>
+
+      <div class="deviceTab" role="navigation">
+        <ul class="nav nav-tabs">
+
+          <li role="presentation" [ngClass]='{active:activeTab==0}' (click)=' activeTab=0 '><a href="javascript:;" >智能设备</a></li>
+          <li role="presentation" [ngClass]='{active:activeTab==1}' (click)=' activeTab=1 '><a href="javascript:;">智能网关</a></li>
+        </ul>
+      </div>
+      <div  *ngIf=' activeTab==0 ' class="table-responsive device">
+        <div class="searchBox row">
+          <p class="col-xs-2 col-sm-3 col-md-4 col-lg-6">设备状态
+            <select class="select" #select (change)='this.Dtab=!this.Dtab;'>
+              <option [selected]="this.Dtab">在线</option>
+              <option [selected]="!this.Dtab">离线</option>
+            </select>
+          </p>
+
+          <div class="col-xs-10 col-sm-9 col-md-8 col-lg-6">
+            <div class="input-group">
+              <input type="text" class="form-control search" placeholder="产品名称／序列号／mac地址" #box (keyup)="0" (keyup.enter)="deviceListF(box.value)">
+              <span class="">
+              <button class="btn btn-default searchBg" type="button" (click)=" deviceListF(box.value)" >Go!</button>
+            </span>
+            </div><!-- /input-group -->
+          </div><!-- /.col-lg-6 -->
+        </div>
+
+        <div class="panel panel-default">
+          <ul class="list-group">
+            <li class="list-group-item borderBN deviceListB">
+              <div>产品名称</div>
+              <div>序列号</div>
+              <div>Mac地址</div>
+              <div>状态</div>
+            </li>
+          </ul>
+          <ul class="list-group deviceListC">
+            <li class="list-group-item"  *ngFor="let list of deviceListData1;let i=index" [ngClass]="{'none':list.isOnline!==this.Dtab}">
+              <div *ngIf="list.isOnline==this.Dtab">
+                <div class="">{{list.deviceName}}</div>
+                <div class="">{{list.deviceSn}}</div>
+                <div class="">{{list.macAddress}}</div>
+                <div class="">{{list.isOnline?'在线':'离线'}}</div>
+                <!--<div class="">{{list.isOnline==='true'?'在线':'离线'}}</div>-->
+                <div class="deviceDetail">
+                  <div class="detailLeft">
+                    <img src="{{list.deviceAvatar}}" alt="">
+                  </div>
+                  <div class="detailRight">
+                    <div class="detailRightD">
+                      <p><b>序列号：</b> <span>{{list.deviceSn}}</span></p>
+                      <p><b> MAC地址：</b><span>{{list.macAddress}}</span></p>
+                      <p><b>vcode：</b><span>{{list.deviceDetails.vendorCode}}</span></p>
+                      <p><b>pcode：</b><span>{{list.deviceDetails.productId}}</span></p>
+                      <p><b>vid：</b><span>{{list.deviceDetails.vendorId}}</span></p>
+                    </div>
+                    <div class="detailRightD">
+                      <p><b>名称：</b><span>{{list.deviceName}}</span></p>
+                      <p><b>协议：</b><span>{{list.deviceDetails.protocol}}</span></p>
+                      <p><b>软件版本：</b><span>{{list.deviceDetails.softwareVersion}}</span></p>
+                      <p><b>硬件版本：</b><span>{{list.deviceDetails.hardwareVersion}}</span></p>
+                      <p><b>是否租赁设备：</b><span>{{list.deviceDetails.isLease}}</span></p>
+                    </div>
+                    <div class="detailBottom">
+                      <span>{{list.isOnline?'在线':'离线'}}/最后一次登录时间:{{list.lastSingleTime}}</span>
+                      <b>{{list.deviceDetails.activedTime}} 注册</b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div  *ngIf=' activeTab==1 ' class="table-responsive device">
+        <div class="searchBox row">
+          <p class="col-xs-2 col-sm-3 col-md-4 col-lg-6">设备状态
+            <select class="select" #select1 (change)='this.Gtab=!this.Gtab;'>
+              <option [selected]="this.Gtab">在线</option>
+              <option [selected]="!this.Gtab">离线</option>
+            </select>
+          </p>
+
+          <div class="col-xs-10 col-sm-9 col-md-8 col-lg-6">
+            <div class="input-group">
+              <input type="text" class="form-control search" placeholder="产品名称／序列号／mac地址"#box1 (keyup)="0" (keyup.enter)="deviceListG(box1.value)">
+              <span class="">
+              <button class="btn btn-default searchBg" type="button" (click)=" deviceListG(box1.value)" >Go!</button>
+            </span>
+            </div><!-- /input-group -->
+          </div><!-- /.col-lg-6 -->
+        </div>
+
+        <div class="panel panel-default">
+          <ul class="list-group">
+            <li class="list-group-item borderBN deviceListB">
+              <div>产品名称</div>
+              <div>序列号</div>
+              <div>Mac地址</div>
+              <div>状态</div>
+            </li>
+          </ul>
+          <ul class="list-group deviceListC">
+            <li class="list-group-item"  *ngFor="let list of deviceListData2" [ngClass]="{'none':list.onLineStatus!==this.Gtab}">
+              <div *ngIf="list.onLineStatus==Gtab">
+                <div class="">{{list.gatewayName}}</div>
+                <div class="">{{list.gatewaySn}}7</div>
+                <div class="">{{list.macAddress}}</div>
+                <div class="">{{list.onLineStatus?'在线':'离线'}}</div>
+                <!--<div class="">{{list.onLineStatus==='true'?'在线':'离线'}}</div>-->
+                <div class="deviceDetail">
+                  <div class="detailLeft">
+                    <img src="{{list.gatewayAvatar}}" alt="">
+                  </div>
+                  <div class="detailRight">
+                    <div class="detailRightD">
+                      <p><b>序列号</b><span>{{list.gatewaySn}}</span></p>
+                      <p><b>MAC地址</b><span>{{list.macAddress}}</span></p>
+                      <p><b>网关ID</b><span>{{list.gatewayId}}</span></p>
+                      <p><b>pid</b> <span>{{list.gatewayDeatils.productId}}</span></p>
+                      <p><b>vid</b><span>{{list.gatewayDeatils.vendorId}}</span></p>
+                    </div>
+                    <div class="detailRightD">
+                      <p><b>名称</b><span>{{list.gatewayName}}</span></p>
+                      <p><b>协议</b><span>{{list.gatewayDeatils.protocol}}</span></p>
+                      <p><b>软件版本</b><span>{{list.gatewayDeatils.softwareVersion}}</span></p>
+                      <p><b>硬件版本</b><span>{{list.gatewayDeatils.hardwareVersion}}</span></p>
+                      <p><b>是否租赁设备</b><span>{{list.gatewayDeatils.isLease}}</span></p>
+                    </div>
+                    <div class="detailBottom">
+                      <span>{{list.onLineStatus?'在线':'离线'}}/最后一次登录时间:{{list.gatewayDeatils.lastSingleTime}}</span>
+                      <b>{{list.gatewayDeatils.activedTime}} 注册</b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footBox></footBox>
