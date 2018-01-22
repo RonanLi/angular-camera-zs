@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import * as $ from 'jquery'
 import { AuthService } from '../services/auth.service';
+import { UserService } from '../services/user.service';
 import {Router, NavigationExtras } from '@angular/router';
 import {HttpClient} from "@angular/common/http";
 import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest,HttpResponse,HttpErrorResponse,HttpParams,HttpHeaders} from '@angular/common/http';
@@ -12,9 +13,8 @@ import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest,HttpResponse,HttpEr
 })
 export class HeadComponent {
   title = 'head';
-  private userData={};
-  ngOnInit(){this.userMsgF();}
-  constructor(public authService: AuthService, public router: Router,private userMsgHttp: HttpClient,) { }
+  ngOnInit(){ }
+  constructor(public authService: AuthService,public userService: UserService, public router: Router,private userMsgHttp: HttpClient,) { }
 
   logout() {
         this.DelCookie('apiKey');
@@ -28,16 +28,6 @@ export class HeadComponent {
     exp.setTime(exp.getTime() + (-1 * 24 * 60 * 60 * 1000));
     var cval = this.authService.GetCookieValue(name);
     document.cookie = name + "=" + cval + "; expires=" + exp.toUTCString();
-
-  }
-
-
-  userMsgF(){
-    this.userMsgHttp.get('/v1.1/application/info').subscribe(req => {
-      this.userData = req['data'];
-      this.authService.userData=req['data'];
-      return this.userData;
-    });
   }
 
   bodyAdd(){

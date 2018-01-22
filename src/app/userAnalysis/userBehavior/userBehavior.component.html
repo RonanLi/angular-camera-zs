@@ -1,0 +1,89 @@
+<headBox></headBox>
+<div class="container-fluid row">
+  <div class="col-sm-3 col-md-3 col-lg-2 sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+  <div class="col-sm-9 col-md-9 col-lg-10 main">
+    <div class="userBehavior">
+      <h3 class="title">用户行为分析</h3>
+
+      <div class="deviceTab" role="navigation">
+        <ul class="nav nav-tabs">
+          <li role="presentation" [ngClass]='{active:activeTab==0}' (click)=' activeTab=0 '><a href="javascript:;">天</a></li>
+          <li role="presentation" [ngClass]='{active:activeTab==1}' (click)=' activeTab=1 '><a href="javascript:;">周</a></li>
+          <li role="presentation" [ngClass]='{active:activeTab==2}' (click)=' activeTab=2 '><a href="javascript:;">年</a></li>
+        </ul>
+      </div>
+
+      <div  *ngIf=' activeTab==0 ' class="table-responsive">
+        <div class="data">
+          <p>一天中 <span>20：00～22：00</span>使用的用户最多，大部分用户使用<span>智能净化器</span>设备的<span>睡眠模式</span>，常用app的<span>执行场景</span>功能</p>
+          <ul class="list-group">
+           <li class="list-group-item borderBN">
+              <div>使用app常用时间段</div>
+              <div>常用设备</div>
+              <div>设备功能</div>
+              <div>常用App功能</div>
+            </li>
+          </ul>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <div>20：00～22：00</div>
+              <div>智能净化器</div>
+              <div>睡眠模式</div>
+              <div>执行场景</div>
+            </li>
+          </ul>
+        </div>
+        <div echarts [options]="optionDay"  class="userEChart"></div>
+      </div>
+      <div  *ngIf=' activeTab==1 ' class="table-responsive">
+        <div class="data">
+          <p>一周中 <span>20：00～22：00</span>使用的用户最多，大部分用户使用<span>智能净化器</span>设备的<span>睡眠模式</span>，常用app的<span>执行场景</span>功能</p>
+          <ul class="list-group">
+            <li class="list-group-item borderBN">
+              <div>使用app常用时间段</div>
+              <div>常用设备</div>
+              <div>设备功能</div>
+              <div>常用App功能</div>
+            </li>
+          </ul>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <div>20：00～22：00</div>
+              <div>智能净化器</div>
+              <div>睡眠模式</div>
+              <div>执行场景</div>
+            </li>
+          </ul>
+        </div>
+          <div echarts [options]="optionWeek"  class="userEChart"></div>
+      </div>
+      <div  *ngIf=' activeTab==2 ' class="table-responsive">
+        <div class="data">
+          <p>一年中 <span>20：00～22：00</span>使用的用户最多，大部分用户使用<span>智能净化器</span>设备的<span>睡眠模式</span>，常用app的<span>执行场景</span>功能</p>
+          <ul class="list-group">
+            <li class="list-group-item borderBN">
+              <div>使用app常用时间段</div>
+              <div>常用设备</div>
+              <div>设备功能</div>
+              <div>常用App功能</div>
+            </li>
+          </ul>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <div>20：00～22：00</div>
+              <div>智能净化器</div>
+              <div>睡眠模式</div>
+              <div>执行场景</div>
+            </li>
+          </ul>
+        </div>
+        <div echarts [options]="optionMonth"  class="userEChart"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footBox></footBox>

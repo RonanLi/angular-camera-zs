@@ -11,7 +11,6 @@ export class AuthService {
   isLoggedIn=this.openUrl();
   redirectUrl: string;
   apiKey:string;
-  userData={};
 
   openUrl(){ if (this.GetCookieValue('apiKey')){ return true; } else{ return false; } }
 

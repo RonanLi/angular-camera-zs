@@ -1,0 +1,30 @@
+<headBox></headBox>
+<div class="container-fluid row">
+  <div class="col-sm-3 col-md-3 col-lg-2 sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+  <div class="col-sm-9 col-md-9 col-lg-10 main">
+    <div class="userEnvironmen">
+      <h3 class="title">用户环境分析</h3>
+
+      <div class="table-responsive">
+
+        <div class="deviceTab" role="navigation">
+          <ul class="nav nav-tabs">
+            <li role="presentation" [ngClass]='{active:chartTab==1}' (click)=' chartTab=1 '><a href="javascript:;" >温度</a></li>
+            <li role="presentation" [ngClass]='{active:chartTab==2}' (click)=' chartTab=2 '><a href="javascript:;" >湿度</a></li>
+            <li role="presentation" [ngClass]='{active:chartTab==3}' (click)=' chartTab=3 '><a href="javascript:;">PM2.5</a></li>
+            <li role="presentation" [ngClass]='{active:chartTab==4}' (click)=' chartTab=4 '><a href="javascript:;">二氧化碳</a></li>
+          </ul>
+        </div>
+        <div *ngIf=' chartTab==1 ' echarts [options]="option1" class="userEChart"></div>
+        <div *ngIf=' chartTab==2 ' echarts [options]="option2" class="userEChart"></div>
+        <div *ngIf=' chartTab==3 ' echarts [options]="option3" class="userEChart"></div>
+        <div *ngIf=' chartTab==4 ' echarts [options]="option4" class="userEChart"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footBox></footBox>

@@ -1,0 +1,41 @@
+
+<headBox></headBox>
+<div class="container-fluid row">
+  <div class="col-sm-3 col-md-3 col-lg-2 sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+
+  <div class="col-sm-9 col-md-9 col-lg-10 main">
+    <div class="bug">
+      <h3 class="title">重点BUG监控</h3>
+      <div class="panel panel-default">
+        <ul class="list-group bugListB">
+          <li class="list-group-item borderBN">
+            <div>类别</div>
+            <div>连接失败次数</div>
+            <div>失败原因</div>
+          </li>
+        </ul>
+
+        <ul class="list-group bugList">
+          <li class="list-group-item">
+            <div>redis</div>
+            <div>135</div>
+            <div>
+              <ul class="bugInfo">
+                <li>无法连接数据库1</li>
+                <li>查询数据库缓慢2次</li>
+                <li>查询数据库缓慢2次</li>
+                <li>查询数据库缓慢2次</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <div class="bugBf"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>接口5分钟内访问超多100次;大量并发300次</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footBox></footBox>

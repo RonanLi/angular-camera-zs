@@ -46,7 +46,7 @@
             </li>
           </ul>
           <ul class="list-group deviceListC">
-            <li class="list-group-item"  *ngFor="let list of deviceListData1;let i=index" [ngClass]="{'none':list.isOnline!==this.Dtab}">
+            <li class="list-group-item"  *ngFor="let list of deviceListData1" [ngClass]="{'none':list.isOnline!==this.Dtab}">
               <div *ngIf="list.isOnline==this.Dtab">
                 <div class="">{{list.deviceName}}</div>
                 <div class="">{{list.deviceSn}}</div>
@@ -116,7 +116,7 @@
             <li class="list-group-item"  *ngFor="let list of deviceListData2" [ngClass]="{'none':list.onLineStatus!==this.Gtab}">
               <div *ngIf="list.onLineStatus==Gtab">
                 <div class="">{{list.gatewayName}}</div>
-                <div class="">{{list.gatewaySn}}7</div>
+                <div class="">{{list.gatewaySn}}</div>
                 <div class="">{{list.macAddress}}</div>
                 <div class="">{{list.onLineStatus?'在线':'离线'}}</div>
                 <!--<div class="">{{list.onLineStatus==='true'?'在线':'离线'}}</div>-->

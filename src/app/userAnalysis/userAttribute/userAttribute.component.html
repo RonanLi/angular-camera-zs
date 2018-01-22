@@ -1,0 +1,24 @@
+<headBox></headBox>
+<div class="container-fluid row">
+  <div class="col-sm-3 col-md-3 col-lg-2 sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+  <div class="col-sm-9 col-md-9 col-lg-10 main">
+    <div class="userAttribute">
+      <h3 class="title">用户属性分析</h3>
+      <div class="userATit">
+        <h5>省份分布</h5>
+        <div>
+          <span>省份</span><span>用户数量</span><span class="pointer" (click)="order=!order;orderFun(order)">切换排序方式</span>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <div echarts [options]="option" class="userAnalysis"></div>
+      </div>
+    </div>
+</div>
+
+</div>
+<footBox></footBox>

@@ -13,6 +13,49 @@ export class LoginBackNews {
   modulenews: ModuleNews[];
   backid: number;
 }
+//用户信息返回
+export class userDetial {
+  appId: string;
+  appName: string;
+  appAvatar: string;
+  phone: string;
+  email: string;
+}
+//添加菜单
+export class MenuAdd {
+  appId: string;
+  annotation: string;
+  englishName: string;
+  vendorCode: string;
+  productCode: string;
+  groupOrder: string;
+  versionLimit: string;
+  version: string;
+  categoryId: string;
+  categoryClass:string;
+  parentId:string;
+}
+//编辑菜单
+export class MenuEdit {
+  commodityId: string;
+  appId: string;
+  categoryId: string;
+  vendorCode: string;
+  productCode: string;
+  englishName: string;
+  templateId: string;
+  annotation: string;
+  recommendLevel: string;
+  guidePicture: string;
+  effectPicture: string;
+  productAvatar: string;
+  qrCodePicture: string;
+  statusCode: string;
+  versionLimit: string;
+  actualPicture: string;
+  groupOrder: string;
+  categoryAvatar: string;
+}
 
 //用户信息类
 export class UserNews {
