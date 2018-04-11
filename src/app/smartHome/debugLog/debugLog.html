@@ -1,0 +1,88 @@
+<headBox></headBox>
+
+<div class="container-fluid row" [ngStyle]="currentStyles">
+  <div class="sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+  <div class="main">
+    <div class="leasedLog">
+      <h3 class="title">实时日志</h3>
+
+      <div class="device">
+
+        <div id="fixedDiv">
+          <input id="filter" placeholder="过滤条件(多个条件用,间隔，不包含以!为前缀)"/>
+          <button (click)="reset()">清空</button>
+          <button *ngIf="this.connect" (click)="closeWebSocket()" >暂停</button>
+          <button *ngIf="!this.connect" (click)="openWebSocket()">开始</button>
+          <hr/>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item debugLogListT">
+            <div>时间</div>
+            <div>账户编号</div>
+            <div>设备序列号</div>
+            <div>消息序列号</div>
+            <div>MESSAGE-SERVER</div>
+            <div>YUNBA-CLOUD</div>
+            <div>API-SERVER</div>
+            <div>GATEWAY-ZIGBE</div>
+            <div>WIFI-DEVIC</div>
+          </li>
+        </ul>
+        <div id="message" #scrollMe [ngStyle]="currentStyleS" class="">
+          <ul class="list-group debugLogListC">
+            <li class="list-group-item magLine"  *ngFor="let list of dataList;let i=index;">
+              <div>{{list.arriveTime|date:'yyyy-MM-dd hh:mm:ss'}}&nbsp;</div>
+              <div>{{list.accountId}}&nbsp;</div>
+              <div>{{list.deviceSn}}&nbsp;</div>
+              <div>{{list.sn}}&nbsp;</div>
+              <div class="statu">
+                <span *ngFor="let subM of list.messageServe">
+                  <i *ngIf="subM.isSucess==true" class="greenBg"></i>
+                  <i *ngIf="subM.isSucess==false" class="redBg"></i>
+                  <!--<b *ngIf="subM.process" class=" arrow glyphicon glyphicon-arrow-right" aria-hidden="true"></b>-->
+                </span>
+                &nbsp;
+              </div>
+              <div class="statu">
+                <span *ngFor="let subY of list.yunbaCloud">
+                  <i *ngIf="subY.isSucess==true&&list.messageServe[8]" class="greenBg"></i>
+                  <i *ngIf="subY.isSucess==false" class="redBg"></i>
+                </span>
+                &nbsp;
+              </div>
+              <div class="statu">
+                <span *ngFor="let subS of list.server">
+                  <i *ngIf="subS.isSucess==true&&list.messageServe[8]&&list.yunbaCloud[8]" class="greenBg"></i>
+                  <i *ngIf="subS.isSucess==false" class="redBg"></i>
+                </span>
+                &nbsp;
+              </div>
+              <div class="statu">
+                <span *ngFor="let subZ of list.zigBee">
+                  <i *ngIf="subZ.isSucess==true&&list.messageServe[8]&&list.yunbaCloud[8]&&list.server[8]" class="greenBg"></i>
+                  <i *ngIf="subZ.isSucess==false" class="redBg"></i>
+                </span>
+                &nbsp;
+              </div>
+              <div class="statu">
+                <span *ngFor="let subW of list.wifiDevice">
+                  <i *ngIf="subW.isSucess==true&&list.messageServe[8]&&list.yunbaCloud[8]&&list.server[8]" class="greenBg"></i>
+                  <i *ngIf="subW.isSucess==false" class="redBg"></i>
+                </span>
+                &nbsp;
+              </div>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<footBox></footBox>
+

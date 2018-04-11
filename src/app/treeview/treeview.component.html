@@ -1,65 +1,14 @@
-<aside class="main-sidebar" [ngClass]="{sliderSmall:this.slider}">
-    <ul class="sidebar-menu">
-      <li class="treeview" [ngClass]="{'active':this.isindex}" (click)="this.isindex=!this.isindex">
-        <a routerLink="/index"> <i class="fa fa-dashboard"></i> <span>首页</span> </a>
-      </li>
+<aside class="main-sidebar">
 
-      <li class="treeview" [ngClass]="{'active':this.isEoms}" (click)="this.isEoms=!this.isEoms">
-        <a> <i class="fa fa-eoms"></i> <span>运维系统</span> <i class="fa fa-angle-left pull-right"></i> </a>
-        <ul class="treeview-menu" [hidden]="!this.isEoms">
-          <li><a routerLink="/eoms/userList" routerLinkActive="on">用户列表</a></li>
-          <li><a routerLink="/eoms/deviceList" routerLinkActive="on">设备列表</a></li>
-          <li><a routerLink="/eoms/productList" routerLinkActive="on">产品列表</a></li>
-        </ul>
-      </li>
-      <li class="treeview" [ngClass]="{'active':this.isPro}" (click)="this.isPro=!this.isPro">
-        <a> <i class="fa fa-problem"></i> <span>问题排查追踪</span> <i class="fa fa-angle-left pull-right"></i> </a>
-        <ul class="treeview-menu" [hidden]="!this.isPro">
-          <li><a routerLink="/track/webLog" routerLinkActive="on">WEB日志监控</a></li>
-          <li><a routerLink="/track/insideLog" routerLinkActive="on">内部接口调用情况</a></li>
-          <li><a routerLink="/track/outsideLog" routerLinkActive="on">外部接口调用情况</a></li>
-          <li><a routerLink="/track/bugLog" routerLinkActive="on">重点BUG监控</a></li>
-          <li><a routerLink="/track/userLog" routerLinkActive="on">重点用户和设备监控</a></li>
-        </ul>
-      </li>
-      <li class="treeview" [ngClass]="{'active':this.isChart}" (click)="this.isChart=!this.isChart">
-        <a> <i class="fa fa-chart"></i> <span>数据统计分析</span> <i class="fa fa-angle-left pull-right"></i> </a>
-        <ul class="treeview-menu" [hidden]="!this.isChart">
-          <li><a routerLink="/charts/userChart" routerLinkActive="on">用户分析</a></li>
-          <li><a routerLink="/charts/deviceChart" routerLinkActive="on">设备分析</a></li>
-          <li><a routerLink="/charts/productChart" routerLinkActive="on">产品分析</a></li>
-        </ul>
-      </li>
-
-      <li class="treeview" [ngClass]="{'active':this.userAnalysis}" (click)="this.userAnalysis=!this.userAnalysis">
-        <a> <i class="fa fa-chart"></i> <span>用户分析</span> <i class="fa fa-angle-left pull-right"></i> </a>
-        <ul class="treeview-menu" [hidden]="!this.userAnalysis">
-          <li><a routerLink="/userAnalysis/userScene" routerLinkActive="on">用户场景分析</a></li>
-          <li><a routerLink="/userAnalysis/userAttribute" routerLinkActive="on">用户属性分析</a></li>
-          <li><a routerLink="/userAnalysis/userBehavior" routerLinkActive="on">用户行为分析</a></li>
-          <li><a routerLink="/userAnalysis/userEnvironmen" routerLinkActive="on">用户环境分析</a></li>
-          <li><a routerLink="/userAnalysis/userEnvironmenContrast" routerLinkActive="on">地区环境数据</a></li>
-          <li><a routerLink="/userAnalysis/userAllContrast" routerLinkActive="on">环境分析总数据</a></li>
-        </ul>
-      </li>
-
-      <li class="treeview" [ngClass]="{'active':this.isSys}" (click)="this.isSys=!this.isSys">
-        <a> <i class="fa fa-system"></i> <span>系统管理模块</span> <i class="fa fa-angle-left pull-right"></i> </a>
-        <ul class="treeview-menu" [hidden]="!this.isSys">
-          <li><a routerLink="">模块管理</a></li>
-          <li><a routerLink="">页面管理</a></li>
-          <li><a routerLink="">用户组管理</a></li>
-          <li><a routerLink="">系统用户管理</a></li>
-        </ul>
-      </li>
-      <li class="treeview" [ngClass]="{'active':this.isSet}" (click)="this.isSet=!this.isSet">
-        <a> <i class="fa fa-manage"></i> <span>设置</span> <i class="fa fa-angle-left pull-right"></i> </a>
-        <ul class="treeview-menu" [hidden]="!this.isSet">
-          <li><a routerLink="/setup/account" routerLinkActive="on">账户信息设置</a></li>
-          <li><a routerLink="/setup/safe" routerLinkActive="on">安全设置</a></li>
-          <li><a routerLink="/setup/subscribe" routerLinkActive="on">系统内容订阅</a></li>
-        </ul>
-      </li>
-
-    </ul>
+  <ul class="sidebar-menu">
+    <li class="treeview" *ngFor="let list of cameraService.userDetial.functionArray">
+      <a *ngIf="list.functionId=='1001'" routerLink="/smartHome/customer" routerLinkActive="on"><i class="fa fa-customer"></i>客户管理</a>
+      <a *ngIf="list.functionId=='1002'" routerLink="/smartHome/device" routerLinkActive="on"><i class="fa fa-device"></i>设备管理</a>
+      <a *ngIf="list.functionId=='1003'" routerLink="/smartHome/subaccount" routerLinkActive="on"><i class="fa fa-subaccount"></i>子账户管理</a>
+      <a *ngIf="list.functionId=='1004'" routerLink="/smartHome/roles" routerLinkActive="on"><i class="fa fa-role"></i>角色管理</a>
+      <a *ngIf="list.functionId=='1005'&&list.permission.log" routerLink="/smartHome/leasedLog" routerLinkActive="on"><i class="fa fa-log"></i>日志管理</a>
+      <a *ngIf="list.functionId=='1003'" routerLink="/smartHome/group" routerLinkActive="on"><i class="fa fa-customer"></i>分组管理</a>
+    </li>
+  </ul>
 </aside>
+

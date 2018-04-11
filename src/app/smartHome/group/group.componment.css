@@ -1,0 +1,43 @@
+/**{margin:0 ;padding:0;}*/
+
+.head{width:100%;height:50px;margin:auto;padding:0 1%;background:#2a3845;color:#fff;}
+.logo{display:inline-block;width:45px;height:36px;margin-right:10px;}
+.headL{float:left;line-height: 50px;}
+.headR{float:right;}
+.userImg{display: inline-block;width:20px;height:20px;margin-top:15px;vertical-align: middle;}
+.user{width:120px;height:50px;line-height: 50px;margin-left:10px; text-decoration: none;color:#fff;}
+.arrow{line-height:50px;margin-left:10px;}
+.arrow:before{content: "\25b2";}
+.arrow.on:before{content: "\25bc";}
+.headList{position: relative;}
+.headList ul{position: absolute;width:85%;top:40px;left:0;text-align:center;list-style: none;z-index: 999;background:#fefefe;}
+.headList ul li>a{line-height:25px;color:#666;}
+.headList ul li>a:hover{color:#00C7B3;}
+
+.head .btn{ display: inline-block; width:24px;height:24px;margin-left: 10px;  vertical-align: middle; }
+
+*{list-style: none;}
+.sidebar{padding:2% 1%;height:auto;}
+/*.treeview-menu{display: none;}*/
+.treeview{position: relative}
+.pull-right-container{content: ''}
+.treeview>a{display:block;width:100%;height:50px;line-height:50px;color:#fff;cursor: pointer;text-indent: 2rem;}
+.treeview>a:hover{color:#fff;background: #2e8b79;}
+.treeview>a:hover i,.treeview .on i{color:#00C7B3;}
+.treeview .on{background: #2e8b79;}
+.treeview>a span{display: inline-block;line-height: 40px;vertical-align:middle;}
+.treeview>a i,.treeview-menu a i{display: inline-block;width:20px;height:20px;line-height: 20px;vertical-align:middle;font-size: 22px;font-weight: 200;}
+.fa{margin:0 3% 0 0;}
+.fa-angle-left{float: right;margin-top:15px; text-align: center;}
+.fa-angle-left:before{ font-style: normal; content: '+'; }
+.active .fa-angle-left:before{content: '-'; }
+.fa-circle-o{margin-right: 5%;}
+.treeview-menu a{display:block;width:80%;margin:5% auto;padding-left:2rem;color:#666;font-size: 14px;}
+.treeview-menu a:hover{color:#00C7B3;text-decoration: none;}
+
+.fa-customer{background: url("../../../assets/imgs/customer.png")}
+.fa-device{background: url("../../../assets/imgs/device.png")}
+.fa-role{background: url("../../../assets/imgs/role.png")}
+.fa-subaccount{background: url("../../../assets/imgs/subaccount.png")}
+.fa-log{background: url("../../../assets/imgs/log.png")}
+

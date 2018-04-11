@@ -1,9 +1,0 @@
-*{margin:0;padding:0;}
-/*.data{margin-bottom:5%;border:1px solid #efefef;background: #fff;}*/
-.data>div{padding:1% 0;text-align:center;border-right:1px solid #efefef;}
-.data>div:last-child{border:none;}
-.data>div p,.data>div h4{line-height: 35px;}
-.data>p{line-height:35px;margin:0;text-indent:2rem;border-bottom:1px solid #efefef;}
-.deviceTab{margin:5% 0;}
-
-.echartsStyle{height:600px;padding:2% ;background:#fff!important;}

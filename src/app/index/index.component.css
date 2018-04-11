@@ -1,0 +1,40 @@
+.index {
+  position: fixed;width: 100%;
+  top: 0;background: #fff;border-bottom: 1px solid #eee;box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);}
+.index .staticHead{margin:0 auto;padding:10px 0;color:#333;}
+.index .staticHead p>a{  font-size: 14px;  color:#606463;}
+.index .staticHead p>a:hover{color: #477DF9; }
+.index .staticHead p .dif{  height: 38px; line-height: 38px;color:#fff;background: #477DF9;   border-radius: 3px;  box-shadow: 1px 1px 10px #4787f9; }
+.index .staticHead p .dif:hover{color:#fff;opacity: 0.8;}
+
+
+
+.staticContain{float:left;width:100%;margin-top: 65px;background: #fff;}
+.indexTop{height:1150px;margin:auto;background: url("../../assets/imgs/index_bg.png")no-repeat center;background-size: 100% 100%;}
+.indexTit {margin-top:25px ;}
+.indexTit h1{font-size: 28px;text-align: center;margin:15px ;}
+.indexTit hr{ width: 70px; margin: 15px auto 30px; height: 5px; border: none; border-top: 2px solid #fff; border-radius: 1px; }
+.indexTit .hrBlue{border-top: 2px solid #477DF9;}
+.img670{display:block;width: 670px;margin:auto;}
+.img550{display:block;width: 550px;margin:auto;}
+.img40{display:block;width: 40px;margin:15px 0;}
+.indexTop>a{display: block;width: 100px;height:35px;line-height:35px;margin:60px auto;text-align:center;background: #fff;color:#477DF9;}
+.indexTop ul{display: block;width:620px;height:50px;margin:30px auto; }
+.indexTop li{display: inline-block;width:150px;height:50px; }
+.indexTop li img{display:block;height:100%;margin: auto;}
+.indexTop p{margin-top:50px;font-size: 12px;text-align: center;color: #fff;}
+.indexLine,.indexLineR{width: 1200px;height:555px;margin:15px auto;padding:90px 60px;background:#f9f9f9; }
+.indexLine .indexLL,.indexLineR .indexLR{width:330px;}
+.indexLineR .indexLL,.indexLine .indexLR{width:670px;}
+.indexLL{float: left;}
+.indexLR{float: right;}
+.indexLine h1{font-size:30px;text-align: center;font-weight: normal;}
+.indexLine h2,.indexLineR h2{font-size:20px;text-align: left;font-weight: normal;}
+.indexLine h6{margin:20px 0 60px;font-size:14px;text-align: center;font-weight: normal;}
+.indexLine hr,.indexLineR hr{ width: 50px; margin: 15px 0 30px; height: 5px; border: none; border-top: 2px solid #477DF9; border-radius: 1px; }
+.indexLine p,.indexLineR p{line-height: 30px;}
+.indexLine a{display: block;height:50px;line-height: 50px;}
+.indexLine li{display: inline-block;width: 200px;margin:0 75px;}
+.indexLine li>img{display: block;width: 116px;margin:0 auto 10px;}
+.indexLine li>h3{margin-bottom: 15px;text-align: center;}
+.indexLine li>p{margin:0;text-align: center;}

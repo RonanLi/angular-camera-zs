@@ -1,91 +1,55 @@
 *{margin:0;padding:0;list-style: none;font-size: 14px;box-sizing: border-box;}
 html body{background-color:#f6f8f9;}
 .container-fluid.row{margin:0;padding:0}
-/*.sidebar{background:#00bbd1;}*/
-.main>div{padding:3%;}
-.main .title{margin-bottom:3%;}
+.sidebar{min-width:130px;max-width: 15%;width:12%;}
+.main{min-width:1024px;width:85%;max-width: 85%;}
+.main>div{padding:1% 3%;}
+.main .title{margin-bottom:20px;}
 
-.searchBox.row{width:100%;margin:0 0 3% 0;}
-.searchBox .search{padding:0;}
+.loading{position: absolute;top:45%;left:49%;}
+.dateIcon{width:20px;height:20px;}
+.searchBox.row{width:100%;min-width: 1080px;}
+.searchBox .search{padding:0 0 0 5px;}
 .searchIpt{border:1px solid #aaa;}
 .search{padding-left:2%;outline: medium;}
 .searchBg{height:34px;vertical-align: middle;background: transparent;}
-.searchBox>p{font-size: 18px;}
-.select{ width:100px; font-size: 14px; line-height: 32px; height: 32px; background: #fff; color:#666; }
+.searchBox>p{font-size: 18px;max-width: 65%;}
+.select{ width:100px; font-size: 12px; line-height: 34px; height: 34px; background: #fff; color:#666; }
+p select.form-control:not([size]):not([multiple]){display:inline-block;height:calc(34px)}
+
+/*日历年份选择*/
+
+
+
+.codeBox select.form-control:not([size]):not([multiple]){display: inline-block;height: calc(34px);  width: 208px; margin-left: 20px}
+.codeBox select.form-control:not([size]){display: inline-block;height: calc(34px);  width: 208px; margin-left: 20px}
 
 .table-responsive.device{overflow: visible;}
 .table{position: relative;}
-
+/*div .btn{height:30px;font-size: 12px;padding: 3px 8px;}*/
+.btn-default{background: #ccc;}
+.btn.btn-primary{background: #337ab7;border-color:#337ab7;}
+.red{color:#e4393c;}
+/*分页*/
+/*.pagination{float:right;margin-top:2rem;border:1px solid #d2d2d2;background: #fff;}*/
+.pagination{float:right;margin-top:2rem;}
+.pagination a,.pagination span{color:#337ab7;}
+/*.pagination a{display: inline-block;padding:5px 10px;border-right:1px solid #d2d2d2;}*/
+/*.pagination li:last-child a{border:none;}*/
+/*.pagination input{ float:left;line-height: 27px; width: 40px;margin-top:1px; margin-left: 10px;outline: none;text-align: center;color:#666;border:1px solid #efefef; }*/
+.pagination input{ float:left;line-height: 30px; width: 40px; margin-left: 10px;outline: none;text-align: center;color:#666;}
+.pagination .active{background:#f3f3f3;}
+.pointer{cursor: pointer;}
+.no-drop{cursor: no-drop;}
+.glyphicon{top:3px;}
 /*设备列表Tab切换*/
 .deviceTab{margin:2% 0;}
 .nav-tabs a{color:#333;}
 .data{margin-bottom:5%;border:1px solid #efefef;background: #fff;}
 
-/*用户列表*/
-.list-group .list-group-item{padding:0;}
-.list-group-item.borderBN{border-bottom:none;}
-.userListB>div,.userListC .list-group-item>div,.deviceListB>div,.deviceListC .list-group-item>div>div,.userAccountB>div,.userAccountC .list-group-item>div{float: left;}
-.userListB>div,.userListC .list-group-item>div{width:18%;height:6rem;line-height: 6rem;text-align: center;}
-.userListB>div{border-left:1px solid rgba(0,0,0,.125);}
-.list-group-item>div{color:#666;}
-.userListB .userListImg,.userListC .list-group-item .userListImg{width:10%;border:none;}
-.userListImg>img{display: block;width:4rem;height:4rem;margin:1rem auto;border:1px solid #000;}
-.userListState{padding-top:1rem;}
-.userListState>p,.userListState>div{line-height: 2rem;margin: 0;}
-.userListState>div>span{color:#666;}
-.userInline{display: initial;}
-
-.userListState .TV{background:url("./assets/imgs/tv.png")no-repeat center;}
-.userListState .PAD{background:url("./assets/imgs/pad.png")no-repeat center;}
-.userListState .IOS{background:url("./assets/imgs/phone.png")no-repeat center;}
-.userListState .IOS,.userListState .PAD,.userListState .TV{display: inline-block;width:1.5rem;height:1.5rem;margin:0 1%;vertical-align: middle;background-size: 100% 100%;}
-
 /*设备列表*/
 .deviceListB>div,.deviceListC .list-group-item>div>div{width:25%;height:6rem;line-height: 6rem;text-align: center;overflow: hidden;}
 .deviceListB>div{height:3rem;line-height: 3rem;}
-/*设备列表 产品详情*/
-.deviceListC .list-group-item{overflow: visible;}
-.deviceListC .list-group-item .deviceDetail{position: absolute;width:80%;height: auto;right:0;bottom:0;background:#fff;z-index: 9;text-align:left;border:1px solid #aaa;display: none;}
-.detailLeft{width:25%;float: left;}
-.detailLeft>img{display: block;width:100%;height:100%;border:1px solid #000;}
-.detailRight{width:75%;float: left;}
-.detailRightD{float: left;width:50%;padding: 2% 0 0 2%;border-left: 1px solid #efefef;}
-.detailRightD>p{line-height: 25px;}
-.detailRightD>p>b{display: inline-block;width:10rem;}
-.detailBottom{ float: left;width:100%;padding:0 2%;border-top:1px solid #efefef;border-left:1px solid #efefef;}
-.detailBottom>span{line-height: 35px;}
-.detailBottom>b{float: right;}
-.list-group-item:hover .deviceDetail{display: block;}
-.list-group-item.none{display: none;}
-/*产品列表*/
-.product .panel,.productSub,.productThird{position: relative;}
-.addSort{overflow: hidden;}
-.addSort>a{ float: right; width: 120px; height:40px;line-height: 40px; text-align: center;border: 1px solid #ddd;  }
-.addSort>a i{display: inline-block;width:20px;height:20px;line-height: 18px;margin-top:10px;font-size: 16px; color:#fff;background:#000;border-radius: 50%;font-style: normal; }
-.pointer{cursor: pointer;}
-.productBook{height:5rem;padding:1rem 2%;}
-.productBook img{display: inline-block;vertical-align: middle;border:1px solid #eee;}
-.productBigI{width:3rem;height:3rem;}
-.productBook>span{display:inline-block;margin-left: 3%;font-size: 16px;color:#333;}
-.productBook>a{float: right;width:7rem;line-height: 2rem;margin:0.5rem 1rem;padding:0 1%;color:#333;border: 1px solid #aaa;border-radius: 5px;cursor: pointer;}
-.productBook>a>i{float: right;width:1.5rem;height:1.5rem;line-height: 1.4rem;margin-top:0.25rem;padding:0;font-size:1.5rem;text-align:center;font-style: normal;color:#fff;background:#aaa;border-radius: 50%;}
-.productBook>b{float: right;width:2rem;height:2rem;line-height:2rem;margin:0.5rem 0;text-align:center;font-size: 2rem;}
-.productBook>a:hover{background: #efefef;}
-.productListC .productSub.on { display: block;}
-/*二级菜单样式*/
-.productBigII{width:2.5rem;height:2.5rem;}
-.productSub .list-group-item{background:#fbfbfb;}
-.productSub .productBook{padding:1rem 4%;}
-.productSub .productBook>span{font-size: 14px;}
-.productSub .productBook>a{font-size: 12px;color:#00C7B3;border:1px solid #00C7B3;}
-.productSub .productBook>a i{background:#00C7B3;}
-.productSub .productBook>b{font-size: 1rem;}
-/*三级菜单样式*/
-.productBigIII{width:2rem;height:2rem;}
-.productThird .list-group-item{line-height:36px;background: #aaaaaa12;}
-.productThird .productBook{height:36px;line-height:36px;padding:0 6%;}
-.productThird .productBook span{font-size: 12px;}
-.productSub .productBook>a .glyphicon-pencil,.productBook>a> .glyphicon-pencil{background:none;color:#999;}
 
 /*添加菜单样式和菜单编辑*/
 .menuAddForm{position: absolute;width:35%;top:0;right:25%;padding-top:1%;background: #fff;border:1px solid #00C7B3;z-index: 88;}
@@ -104,19 +68,14 @@ html body{background-color:#f6f8f9;}
 .userAccountC .list-group-item>div img{display: inline-block;width:4rem;height:4rem;border:1px solid #000;vertical-align: middle;}
 .userAccountC .list-group-item .phonebind{width: 70%;text-align: center; padding-right:1%;}
 /*菜单*/
-.sidebar{padding-top:2%;}
+.sidebar{padding:2% 0;background: #3aa690;color:#fff;}
 .sidebar-collapse .sidebar{max-width:55px;min-height:400px;height:400px;margin-right: 5%;padding:2% 0 0 15px;background: #d2f3f0;}
 .sidebar-collapse  .treeview-menu{ position:absolute;width:180px;top:0;left:98%;background:#fcfcfc;z-index: 99; border:1px solid rgba(0,0,0,.125); border-radius: 5px;}
 .sidebar-collapse .treeview[_ngcontent-c3] > a[_ngcontent-c3]:hover{background-color:transparent; }
 .sidebar-collapse .treeview[_ngcontent-c3] > a[_ngcontent-c3] span[_ngcontent-c3],.sidebar-collapse .treeview[_ngcontent-c3]>a i.fa-angle-left[_ngcontent-c3]{display: none;}
 .sidebar-collapse .treeview-menu{display: none;}
 .sidebar-collapse .treeview[_ngcontent-c3]:hover .treeview-menu{display: block!important;}
-.sidebar-collapse .fa-dashboard[_ngcontent-c3]{background:url("./assets/imgs/index_iconG.png");}
-.sidebar-collapse .fa-eoms[_ngcontent-c3]{background: url("./assets/imgs/emos_iconG.png");}
-.sidebar-collapse .fa-chart[_ngcontent-c3]{background: url("./assets/imgs/chart_iconG.png");}
-.sidebar-collapse .fa-problem[_ngcontent-c3]{background: url("./assets/imgs/problem_iconG.png");}
-.sidebar-collapse .fa-system[_ngcontent-c3]{background: url("./assets/imgs/system_iconG.png");}
-.sidebar-collapse .fa-manage[_ngcontent-c3]{background: url("./assets/imgs/manage_iconG.png");}
+
 /*账户设置*/
 .userAccountC .list-group-item .modify{position: absolute;width:30%;line-height: 1rem;padding:0; bottom:0;left:35%;background: #fafafa;border:1px solid rgba(0,0,0,.125);border-radius: 5px;}
 .modify>h3{line-height:5rem;text-indent:2rem;border-bottom:1px solid #ccc;}
@@ -128,54 +87,286 @@ html body{background-color:#f6f8f9;}
 /*安全设置*/
 .userSafe .form{padding:3%;}
 .userSafe .control-label{line-height: 40px;}
-.userSafe .form-group input{width:30%;line-height: 40px;padding-left: 1rem;}
+.userSafe .form-group input{width:30%;height:40px;line-height: 40px;padding-left: 1rem;}
 .userSafe .form-group .btn{line-height: 40px;font-size: 16px;}
 
-/*系统内容订阅*/
-.subscribeList .list-group-item>div{float: left;width:20%;line-height: 50px; text-indent: 2rem;}
-.subscribeList input[type="checkbox"]{display:inline-block;width:30px;height:30px;vertical-align: middle;}
-.subscribeList .pointer{cursor: pointer;}
-/*内部接口*/
-.joggleSort{margin-bottom: 20px;}
-/*重点BUG监控*/
-.bug .panel{padding:1% 2%;}
-.bugListB .list-group-item{background:#f3f3f3;}
-.bugListB .list-group-item>div{line-height: 50px;}
-.bugList .list-group-item>div,.bugListB .list-group-item>div{ display: inline-block;width:33%;text-indent: 2rem;vertical-align: middle;}
-.bugList .list-group-item>div{padding:10px 0;}
-.bugInfo li{line-height: 25px;}
-.bugBf{line-height:50px;margin:5% 0;padding:0 2%;border:1px solid #ddd;}
-/*用户BUG*/
-.userLogListB .list-group-item>div,.userLogList .list-group-item>div{display:inline-block;width:33%;line-height: 40px;text-indent: 2rem;}
-
-.userLogTab .nav{display: inline-block; border: 1px solid #ddd;background: #fff;}
-.userLogTab .nav:last-child{float: right;}
-.userLogTab .nav li{margin:0;}
-.userLogTab .nav li a{color:#666;border-radius: 0;}
-.userLogTab .nav li:hover {background:none;}
-.userLogTab .nav li:hover a{color:#00C7B3;}
-.userLogTab .nav .on{background:#ddd;}
-.userLogTab .nav .on a{color:#333;background:#ddd;}
 
 
+/*表格通用样式*/
+.customerListT>div,.customerListC .list-group-item>div,.deviceGL .deviceListT>div,.deviceGL .deviceListC .list-group-item>div,.leasedLogListT>div, .leasedLogListC .list-group-item>div,.rolesListT>div,.rolesListC .list-group-item>div,.groupListT>div,.groupListC .list-group-item>div,.debugLogListT>div,.debugLogListC .list-group-item>div{display: inline-block;line-height: 40px;text-align:center;border-right:1px solid rgba(0,0,0,.125);}
+.customerListT>div:last-child,.customerListC .list-group-item>div:last-child,.deviceGL .deviceListT>div:last-child,.deviceGL .deviceListC .list-group-item>div:last-child,.leasedLogListT>div:last-child,.leasedLogListC .list-group-item>div:last-child,.rolesListT>div:last-child,.rolesListC .list-group-item>div:last-child ,.groupListT>div:last-child,.groupListC .list-group-item>div:last-child{border:none;}
+.customerListT>div label,.deviceGL .deviceListT>div label,.leasedLogListT>div label,.rolesListT>div label,.rolesListC .list-group-item>div label,.rolesListC .addForm .pr label{margin:0;cursor: pointer;}
+.fff{color:#fff!important;}
+.customer .addForm form input[type='file'],.deviceGL .addForm form input[type='file']{width:60%}
+.list-group-item{padding:0!important;position: static!important;}
+.panel{position: relative;}
+.list-group-item.borderBN{border-bottom: none;}
+.list-group-item img.small{width:38px;}
+.imgBig{position:absolute;width:30%;top:160px;left: 35%;z-index: 99;}
 
-/*y用户属性分析*/
-.userAttribute .table-responsive{background: #fff;}
-.userAttribute .userAnalysis{height:600px;}
-.userATit{ padding-top:1%; background: #fff;}
-.userATit h5{line-height: 40px;margin-bottom:1%;text-indent:2rem;font-size:16px;border-left: 3px solid #333;}
-.userATit>div{ width: 40%; line-height: 40px; border: 1px solid rgba(0,0,0,.125);}
-.userATit>div span { display: inline-block; padding: 0 0 0 3%; }
+.imgBig p{line-height:50px;margin: 0;text-indent: 2rem;border-bottom:1px solid #aaa;background: #fff;}
+.imgBig img{width: 100%}
+.imgBig a,.imgBig span{float: right; width: 35px; text-indent: 0; text-align: center;}
+.imgBig span{font-size: 30px;cursor: pointer;color: #999;}
+/*客户管理*/
+.customerListT>div,.customerListC .list-group-item>div{ width:13.5%; }
+.customerListTC>div,.customerListCC .list-group-item>div{ width:11.5%; }
+.customerListT>div label{margin:0;cursor: pointer;}
+.btnBox{margin:10px 0;padding:10px; line-height: 30px; border-radius: 5px; font-size: 18px;background: #2e8b79;color: #fff;overflow: hidden;}
+.btnBox .btn{float: right;margin-left:10px;}
+.btnBox .btn-success { background-color: #61B1F5; border-color: #61B1F5; }
+.customer .searchBox.row{margin:0;}
+/*客户管理添加客户 子账户管理添加客户*/
+.customer .addForm,.deviceGL .addForm{position:absolute;width:550px;top:-64px;left:calc(50% - 340px); padding: 0 0 1%; border: 1px solid #e3e3e3;background:#fff;z-index: 11;border-radius: 5px;}
+.customer .addForm form,.deviceGL .addForm form{margin:auto;padding:1% 3% 3%;border-radius: 5px;}
+.customer .addForm form input,.customer .addForm form label,.deviceGL .addForm form input,.deviceGL .addForm form label{display: inline-block;width:40%;height:35px;line-height:30px;margin:0 4%;}
+.customer .addForm form label,.deviceGL .addForm form label{width:25%;text-align: right;}
+/*编辑客户*/
+/*.customer .list-group-item .editForm{position:absolute;width: 36%;top:45%;right:35%; padding: 1% 0; border: 1px solid #e3e3e3;background:#fff;z-index: 10;}*/
+.customer .list-group-item .editForm{position:absolute;width: 45%;top:-64px;right:35%; padding: 0 0 1%; border: 1px solid #e3e3e3;background:#fff;z-index: 10;border-radius: 5px;}
+.customer .editForm form{margin:auto;padding:1% 3% 3%;border-radius: 5px;}
+.customer .editForm form input,.customer .editForm form label{display: inline-block;width:40%;height:35px;line-height:30px;margin:0 4%;text-indent: 1rem;}
+.customer .editForm form label{ padding-right:2%;text-align: right;}
 
-/*用户环境分析*/
-.userEChart{height:600px;background:#fff !important;}
+/*租用日志*/
+.leasedLogListT>div, .leasedLogListC .list-group-item>div{ width:18%;border:none; }
+.leasedLogListT .logL,.leasedLogListC .list-group-item .logL{ width:44.5%; }
 
-/*用户行为分析*/
-.userBehavior .data>p{line-height:40px;margin-bottom:0;text-indent: 2rem;}
-.userBehavior .data>p span{line-height:40px;color:#2cc20a;}
-.userBehavior .list-group-item>div{float: left;width:25%;line-height: 35px;text-align:center;border-left: 1px solid #e3e3e3;}
-.userBehavior .list-group-item>div:first-child{border:none; }
+/*日历样式*/
+
+.calendar{ position:relative;width: 178px; display:inline-block;}
+.ui-datepicker{ position: absolute; width: 175px; top: 35px; padding-bottom:2%; background: #fff; border: 1px solid #ddd; }
+/*.ui-datepicker-calendar{ width: 90%; margin: 0 auto; display: block; }*/
+.ui-datepicker-calendar{ width: 100%; margin: 0 auto; display: block; }
+.ui-datepicker-header{padding-bottom: 5px; background: #edeff1;overflow: hidden;}
+.ui-datepicker-prev,.ui-datepicker-next{float:left;width:20px;height:20px;margin-top:5px;background:url("./assets/imgs/prev.png")no-repeat center;background-size: 65%;}
+.ui-datepicker-next{float: right;background:url("./assets/imgs/next.png")no-repeat center;background-size: 65%;}
+
+.ui-datepicker-title{float:left;width:128px;line-height:20px;margin-top:5px;text-align: center;}
+.ui-datepicker-calendar tr{border-bottom: 1px solid #f3f3f3;}
+.calendar td,.calendar th { padding: 0; display: inline-block; width: 22px;text-align: center; }
+.calendar tr{line-height: 20px;}
+.ui-datepicker .ng-star-inserted a,.ui-datepicker .ng-star-inserted th span{display:inline-block;width: 22px; line-height: 20px;}
+.ui-datepicker .ng-star-inserted a{color:#333;}
+.ui-datepicker .ui-datepicker-other-month a{color:#999;}
+.ui-inputtext{height:30px;line-height: 30px;width:100%;padding-left:5px;font-size: 12px;}
+.devDate{position:relative;display:inline-block;width:110px;}
+.devDate .ui-inputtext{ heigt:32px;line-height: 33px;text-indent: 0.8rem;font-size:12px;vertical-align: middle; color: #666;border: 1px solid #a6a6a6; border-radius: 5px;}
+thead,tbody{display: block;width: 100%;padding:0 5%;}
+thead{background: #f6f8fa;}
+.todayTime,.clearTime{float: right;margin:5px 10px 0 0; }
+.todayTime>span,.clearTime>span{display: block; width: 40px; height: 20px; line-height:20px;overflow: hidden;}
+.todayTime>span:before{ content: '今天'; }
+.clearTime>span:before{ content: '清空'; }
+
+/*设备管理*/
+.deviceGL .deviceListCD .list-group-item>div,.deviceGL .deviceListCD>div{display: block;float: left;}
+.deviceGL .deviceListCB .list-group-item>div{vertical-align: middle;border-color:#fff;line-height: 0;}
+.deviceGL .deviceListCB .list-group-item{padding:4px 0;}
+.deviceGL .deviceListT>div,.deviceGL .deviceListC .list-group-item>div{width:10.2%;font-size: 12px;}
+.deviceGL .deviceListT .longDiv,.deviceGL .deviceListC .list-group-item .longDiv{width:21.5%;}
+.deviceGL .deviceListT .short,.deviceGL .deviceListC .list-group-item .short{width:5%;}
+.deviceGL .deviceListC .list-group-item .editForm{position:absolute;width: 45%;top:-64px;right:35%; padding: 0 0 1%; border: 1px solid #e3e3e3;background:#fff;z-index: 10;border-radius: 5px;}
+.deviceGL .editForm form{margin:auto;padding:1% 3% 3%;border-radius: 5px;}
+.deviceGL .editForm form input,.deviceGL .editForm form label{display: inline-block;width:40%;height:35px;line-height:30px;margin:0 4%;text-indent: 1rem;}
+.deviceGL .editForm form label{ padding-right:2%;text-align: right;}
+.deviceGL .deviceListC .list-group-item .sel,.deviceGL .deviceListT .sel{width:5%;}
+.deviceGL .deviceListC .list-group-item .fun,.deviceGL .deviceListT .fun{width:16%;}
+.deviceGL .deviceListC .list-group-item .deviceSn,.deviceGL .deviceListT .deviceSn{width:15%;;}
+/*.deviceGL .deviceListC .list-group-item .deviceSn{overflow-x: scroll;}*/
+.deviceGL .deviceListC .list-group-item .deviceSn p,.deviceGL .deviceListT .deviceSn p{ line-height: 30px; margin: 0; }
+.deviceListCB .longDiv{padding:0 0 0 10px;}
+.deviceListCD .longDiv{}
+.deviceListCB .longDiv p,.deviceListCD .longDiv p{line-height: 23px;margin:1px 0;text-align: left;font-size:12px;overflow: hidden;}
+.deviceListCB .longDiv p .btn {float:right;line-height: 20px;margin:1px;padding:1px 4px;font-size: 12px;}
+
+.form-group .time .ui-datepicker-header{padding:5px 5px 10px 5px ;background: #f1f2f5;overflow: hidden;}
+.form-group .ui-datepicker-prev,.form-group .ui-datepicker-next{background:url("./assets/imgs/prev.png")no-repeat center;background-size: 65%;}
+.form-group .ui-datepicker-next{float: right;background:url("./assets/imgs/next.png")no-repeat center;background-size: 65%;}
+.form-group .ui-datepicker-title{width:118px;line-height:20px;}
+
+.deviceGL .editForm .form-group .time,.deviceGL .addForm .form-group .time{position: relative;}
+
+.deviceGL .addForm .form-group .ui-datepicker{top:30px !important;left:21px !important;}
+.deviceGL .editForm .form-group .ui-datepicker{top:30px !important;left:26px !important;}
+
+.form-group tr{line-height: 20px;}
+.form-group .ui-inputtext{height:30px;line-height: 30px;width:100%;;}
+.Btime{position: relative;}
+.Btime .ui-datepicker{ top:0!important;left: 10%; }
+.deviceGL .couSec{display:inline-block;width:40%;margin:0 4%;}
+
+/*角色管理*/
+.rolesListT>div,.rolesListC .list-group-item>div{width:24.5%;vertical-align: middle;}
+.rolesListC .list-group-item>div{height:120px;line-height: 120px;}
+.list-group-item .permission p{line-height: 14px;margin:5px 0; font-size: 12px; text-align: left;}
+.list-group-item .permission p b{font-size: 12px;font-weight: normal;}
+.rolesListC .list-group-item .editForm{position: absolute;width:630px;top:-64px;left:calc(50% - 430px);z-index: 9;border-radius: 5px;}
+.rolesListC .list-group-item .editForm form{padding:1% 0 5%;background:#fff;border:1px solid #e3e3e3;border-radius: 5px;}
+.rolesListC .editForm form div{line-height: 50px;}
+.rolesListC .editForm form input,.deviceGL .editForm form label{display: inline-block;width:40%;height:35px;line-height:30px;margin:0 4%;text-indent: 1rem;}
+.rolesListC .editForm form label{ padding-right:2%;text-align: right;}
+.rolesListC .pl,.rolesListC .pr{float: left;vertical-align: top;}
+.rolesListC .pl{width: 29%; text-align: right; margin-right: 8%;}
+.rolesListC .pr{width: 62%;    padding: 10px 0 0 6px;text-align: left;border:1px solid #e3e3e3;}
+.rolesListC .editForm form .pr p{line-height: 20px;}
+.rolesListC .editForm form .pr label{display: inline-block;width:55px;font-size: 12px;cursor: pointer}
+.rolesListC .editForm form .pr input{display: inline-block;width: 10px;vertical-align: middle;}
+.rolesListC .editForm form .pr b{display: inline-block;width: 28px;font-weight: normal;}
+
+.roles .addForm{position: absolute;width:630px;top:-64px;left:calc(50% - 430px);z-index: 9;border-radius: 5px;}
+.roles .addForm form{padding:1% 0 5% ;background:#fff;border:1px solid #e3e3e3;border-radius: 5px;}
+.roles .addForm form input,.roles .addForm form label{display: inline-block;width:30%;height:35px;line-height:28px;text-indent: 1rem;}
+.roles .addForm form label{text-align: center;}
+.roles .addForm .pl,.roles .addForm .pr{float: left;width:30.6%;vertical-align: top;}
+.roles .addForm .pl{text-align:center;}
+.roles .addForm .pr{width: 68%; padding: 10px 0 0 6px;text-align: left;border:1px solid #e3e3e3;}
+.roles .addForm form .pr p{line-height: 20px;}
+.roles .addForm form .pr label{display: inline-block;width:55px;font-size: 12px;cursor: pointer}
+.roles .addForm form .pr input{display: inline-block;width: 10px;vertical-align: middle;}
+.roles .addForm form .pr b{display:inline-block;font-weight: normal;text-indent: 0;vertical-align: middle;}
+.roles .addForm form .btn{margin: 5% 5% 0 12%;}
+/*子账户管理*/
+.deviceGL .addForm{top:-64px;border-radius: 5px;}
+.deviceGL .addForm form label,.deviceGL .editForm form label{vertical-align: top;}
+.deviceGL .addForm form .labBox,.deviceGL .editForm form .labBox{display: inline-block;width:40%;min-height:40px;max-height:180px;margin:0 4%;text-align:left;border:1px solid #d2d2d2;overflow-y: scroll;}
+.deviceGL .addForm form .lab input,.deviceGL .editForm form .lab input{width:20px;display: inline-block;vertical-align: middle}
+.deviceGL .addForm form .lab,.deviceGL .editForm form .lab{width:100%; margin:0;text-align: left;}
+/*分组管理*/
+.group .prve .glyphicon,.group .next .glyphicon{font-size: 20px;font-weight: 100;}
+.groupListT>div,.groupListC .list-group-item>div{width:19.5%;}
+.group .addForm{position:absolute;width: 960px;top:-64px;left:calc(50% - 482px);border: 1px solid #d2d2d2;background: #fafafa; z-index: 4;border-radius: 5px;}
+.group .addForm form{padding: 5px 0;border-radius: 5px;}
+.group .addForm .form-group,.group .editForm .form-group{display: inline-block;margin: 0 12px ;}
+.group .addForm .form-group input,.group .addForm .form-group select,.group .editForm .form-group input,.group .editForm .form-group select{width:120px; height: 30px;}
+.group .addForm .form-group select,.group .editForm .form-group select{border-radius: 5px;}
+.groupEdit{height:504px;margin:10px 0 5px;padding:0 10px; overflow: hidden;}
+.formName{  border-bottom: 1px solid #efefef;margin-bottom: 10px; padding: 10px 20px; text-align: left; font-weight: normal;}
+.formClose{ float: right;color: #666; font-style: normal; font-size: 22px; font-weight: lighter; cursor: pointer;  }
+.group .addForm label,.group .editForm label{font-weight: normal;}
+
+.groupEditBoxL{ float: left; width: 20%; height: 100%; min-width: 180px; border:1px solid #d2d2d2;background: #fff;  overflow-y: scroll; }
+.groupEditBoxL .groupSearch{padding:5px;}
+.groupEditBoxL .list{ padding:0 5px;height: 30px;line-height: 20px;text-align: left; }
+.groupEditBoxL .list .deviceAdd{ float: right;cursor: pointer;width: 20px;height:20px;background: url("./assets/imgs/add.png")no-repeat center;}
+
+.groupEditBoxR{ float: right;    height: 100%;background: #fff; }
+.groupEditBoxR .divPage{position: relative}
+
+.groupEditBoxR .divPageTop{width:490px;line-height: 40px;margin:0;padding:10px 0;text-align: center}
+.groupEditBoxR .divPageTop .add{ position: absolute; right: 38px; top: 15px;    border-radius: 15px; background: #fff; color: #337ab7;}
+.groupEditBoxR .divPageTop .del{ position: absolute; right: 128px; top: 15px;    border-radius: 15px; background: #fff; color: #337ab7;}
+
+.groupEditBoxR .divPage>div{;width:680px;min-height:440px;height:500px;margin:0 30px;overflow: hidden;}
+.groupEditBoxR .divPage>div .prve{position: absolute;height:24px;top:51%;left: 0;background: url("./assets/imgs/prev.png")no-repeat center;}
+.groupEditBoxR .divPage>div .next{position: absolute;height:24px;top:51%;right: 0;background: url("./assets/imgs/next.png")no-repeat center;}
+
+.groupEditBoxR .list{position:relative;float: left;text-align:center;border:1px solid #efefef;overflow: hidden; }
+.groupEditBoxR .list .title{font-size: 16px;margin-top:6px;}
+.groupEditBoxR .list4{ width: 322px;height:200px;margin:9px; }
+.groupEditBoxR .list4 h6{height:60px;font-size: 14px;}
+.groupEditBoxR .list4 .title,.groupEditBoxR .list9 .title{height: 40px;line-height: 40px;}
+
+.groupEditBoxR .list9{ width: 215px;height:136px;margin:5px; }
+.groupEditBoxR .list9 h6{height: 32px; margin: 0; font-size:14px;overflow: hidden; text-overflow: ellipsis;}
+.groupEditBoxR .list16{ width: 164px;height:104px;margin:3px; }
+.groupEditBoxR .list16 h6{height: 16px;line-height: 16px;margin:0;overflow:hidden;white-space: nowrap;text-overflow: ellipsis;}
+.groupEditBoxR .list p{line-height:30px;margin:0;font-weight:600;border-bottom: 1px solid #dedede;}
+.groupEditBoxR .list16 .title{font-size: 14px;margin-bottom: 4px;}
+.groupEditBoxR .list .btn{position: absolute;right: 5px;bottom:5px;}
+.groupEditBoxR .list .del{padding: 0;}
+/*编辑分组*/
+.groupListC .list-group-item {}
+
+.groupListC .list-group-item .editForm{ position: absolute; width: 960px; top: -64px;left:calc(50% - 482px);background: #fafafa; border: 1px solid #d2d2d2; z-index: 4; border-radius: 5px;}
+.group .editForm form{ padding: 5px 0;border: 1px solid #d2d2d2;border-radius: 5px;}
+.group .editForm form input,.group .editForm form select{ height:24px;line-height: 24px;}
+.group .editForm form input.btn{ padding: 5px 0; width: 125px; height: 30px; line-height: 20px; margin: 0 20px;}
+
+/*视频页面*/
+/*需要用padding来维持16:9比例,也就是9除以16*/
+
+.video{ width:100%; position:relative; padding-bottom:56.25%; height: 0; }
+.video video{ position: absolute; top:0; left: 0; width: 100%; height: 100% }
+.videoName{position: absolute;top:25px;right: 20px;font-size:20px;color: #fff;}
+.videoAdr{position: absolute;bottom:25px;left: 20px;font-size:20px;color: #fff;}
+.video .videoStatu{position: absolute;top:90px;left: 25px;color: #fff;z-index: 99;}
+.videoStatu span{margin:0 5px;font-size: 30px;}
+
+/*分组视频*/
+.groupVideo{position:relative; float: left; width:50%; padding-bottom:28.1%; height: 0;border: 1px solid #000; }
+.groupVideo video{ position: absolute; top:0; left: 0; width: 100%; height: 100% }
+.groupVideo .videoStatu{position: absolute;top:40px;left: 5px;color: #fff;z-index: 99;}
+.videoNone{position:absolute;width: 100%;top:45%;text-align: center;line-height: 40px;}
+.green{color:#34f514;}
+.red{color:#f55d53;}
 
 
-/*all*/
-/*.userAllContrast .userEChart{height:800px;}*/
+
+/*---遮罩----*/
+.calendar{top:0px;}
+.mask{ position: fixed; width: 100%; height: 100%;top:0; background: url("assets/imgs/bg_op.png"); z-index: 3; }
+
+/*静态页面*/
+
+.img60{display: inline-block;width: 50px;margin-right:15px;vertical-align: middle;}
+.img128{display: block;width: 128px;margin:30px auto;vertical-align: middle;}
+.img20{display: inline-block;width: 20px;margin-right:15px;vertical-align: middle;}
+
+
+.download{float:left;width:100%;background: url("assets/imgs/download_bg.png")no-repeat center;background-size: 100% 100%;}
+
+.staticHead,.sFootInbox,.sFootCopy,.staticMain{width: 1200px;margin: auto;}
+.staticHead{margin:30px auto 40px;color:#fff;}
+.staticHead p{float: right;margin-top:5px;}
+.staticHead p>a{display:inline-block;width:160px;height:38px;line-height:38px;margin-left:10px;text-align:center;color:#477DF9;background:#fff;border-radius: 2px;text-decoration: none;}
+.staticHead p>a:hover{color:#477DF9;background:#fff;opacity: 0.8;}
+.staticHead p .on{color:#fff;}
+
+.staticMain h2{margin:10px auto 30px;text-align: center;color: #fff;font-size: 24px;font-weight: normal;}
+.staticMain p{margin-top:15px;text-align: center;color: #fff;font-size: 16px;}
+.staticMain hr{ width: 7%; margin: 15px auto 30px; height: 5px; border: none; border-top: 2px solid #fff; border-radius: 1px; }
+.staticMain ul {margin:60px auto 90px;padding: 0 145px;}
+.staticMain ul li{ display: inline-block; width: 260px; height: 274px; margin: 20px; background: #fff; vertical-align: middle; color: #477DF9; border-radius: 5px; }
+.staticMain ul li:hover{opacity: 0.9;}
+.staticMain ul li a{display: block;width: 120px;height:35px;line-height:35px;margin:auto;text-align:center;border:1px solid #477DF9;border-radius: 2px;text-decoration: none;}
+.staticMain ul li span{display: block;width: 120px;height:35px;line-height:35px;margin:auto;text-align:center;}
+.staticMain ul li a:hover{border: none;color:#fff;background: #477DF9;}
+.staticFoot{width:100%;padding-top:1px;background:#27374E;}
+.sFootInbox{margin:50px auto 95px;}
+.sFootL{float: left;width: 200px;}
+.sFootR{position:relative;float: right;width: 200px;}
+.staticFoot li a,.staticFoot li span{height: 30px; line-height: 30px;color:#939AA7;cursor: pointer;}
+.staticFoot li a:hover,.staticFoot li span:hover{color:#dee0e4;text-decoration: none;}
+
+.sFootTit{margin-bottom: 10px;}
+.staticFoot .sFootTit span{color: #619CFE;cursor: default;}
+.sFootR .img128{position: absolute;    bottom: 31px; right: 31px;z-index: 2;}
+.sFootCopy{height:45px;line-height:45px;margin-bottom:20px;text-align: center;color: #939AA7;}
+
+
+
+/*实时日志*/
+
+#message{overflow-y: scroll;}
+.magLine.list-group-item{border-bottom: 1px solid #eee;border-top:none;}
+.debugLogListT>div,.magLine>div{float: left;width: 10.8%;}
+.debugLogListT>div:last-child,.magLine>div:last-child{border:none;}
+.debugLogListC .magLine .statu{white-space: nowrap;overflow-x: scroll;overflow-y: hidden;}
+.magLine span{line-height: 15px;text-align: center;}
+.magLine span>i{ display: inline-block;width: 15px;height: 15px;border-radius: 50%; }
+.greenBg{background:#65ff98;}
+.redBg{background:#f44336;}
+.aaaBg{background:#aaa;}
+.arrow{color:#65ff98; }
+
+
+
+
+
+
+
+
+
+
+

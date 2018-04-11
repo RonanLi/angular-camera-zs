@@ -9,4 +9,6 @@ import { Component,OnInit } from '@angular/core';
 export class IndexComponent {
   title = 'false';
   ngOnInit() { }
+  /*定义参数*/
+  public weixin;
 }

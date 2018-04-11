@@ -1,0 +1,231 @@
+<headBox></headBox>
+<div *ngIf="this.mask" class="mask"></div>
+
+<div class="container-fluid row" [ngStyle]="currentStyles">
+  <div class="sidebar">
+    <app-treeview></app-treeview>
+  </div>
+
+  <div class="main">
+    <div class="group">
+      <h3 class="title">分组管理</h3>
+
+      <div class=" groupList">
+        <div class="searchBox row">
+          <p class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+            <select class="select" style="width:135px;" [ngModel]="optionL" (ngModelChange)="optionL=$event;info=optionL;">
+              <option *ngFor="let item of optionList" [value]='item.name' [ngClass]="item.name">{{item.name}}</option>
+            </select>
+          </p>
+
+          <div class="col-xs-3 col-sm-3 col-md-3 col-lg-4">
+            <div class="input-group">
+              <input type="text" class="form-control search" placeholder="请输入分组名称" #box (keyup)="0" (keyup.enter)="searchList(box.value,info,pageIndex)">
+              <span class="">
+                <button class="btn btn-default searchBg" type="button" (click)=" searchList(box.value,info,pageIndex)" >查询</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="btnBox">分组管理
+          <button *ngIf='power.add' class="btn btn-primary" (click)="this.addgroup=!this.addgroup;this.mask=true;getDeviceList();">{{this.addgroup?'取消添加':'添加分组'}}</button>
+        </div>
+
+        <div class="panel panel-default">
+          <ul class="list-group">
+            <li class="list-group-item borderBN groupListT">
+              <div>分组名称</div>
+              <div>分组方式</div>
+              <div>间隔时间(s)</div>
+              <div>操作</div>
+              <div>播放</div>
+            </li>
+          </ul>
+          <ul class="list-group groupListC">
+            <li class="list-group-item" *ngFor="let list of groupList">
+              <div>{{list.groupName}}</div>
+              <div>{{list.displayMode}}</div>
+              <div>{{list.switchInterval}}</div>
+              <div>
+                <button *ngIf='power.edit' class="btn btn-primary" (click)="list.editgroup=!list.editgroup; editDateNew(list.groupContent);this.mask=true;editData.select=grad=gradChang(list.displayMode);editDeviceList(list.groupContent);editData.name=list.groupName;editData.intervalTime=list.switchInterval">编辑</button>
+                <button *ngIf='power.delete' class="btn btn-danger" (click)="delGroup(list.groupId)">删除</button>
+              </div>
+              <div><a *ngIf='power.lookup' href="{{'http://camera.huadiot.com/groupVideo.html?data='+cameraService.apiKey+'&m='+list.groupId}}" target="_blank">查看</a></div>
+              <!--编辑分组-->
+              <div class="editForm" *ngIf="list.editgroup">
+                <form #form="ngForm" (ngSubmit)="list.editgroup=false;page=1;this.mask=false;form.form.valid && editGroup(form.value,grad,onGroupList,list.groupId);" novalidate  role="form" class="form">
+                  <h3 class="formName">编辑分组  <i class="formClose" (click)="list.editgroup=false;page=1;this.mask=false;getDeviceList();">X</i></h3>
+                  <div class="form-group ">
+                    <label class="control-label">分组名称：</label>
+                    <input type="text" #name="ngModel" [(ngModel)]="editData.name" name="name" placeholder="请输入分组名称" autocomplete="off">
+                    <div *ngIf='form.submitted && (!name.valid)' class="text-danger">分组名称不能为空</div>
+                  </div>
+                  <div class="form-group ">
+                    <label class="control-label">间隔时间：</label>
+                    <input type="text" #intervalTime="ngModel" [(ngModel)]="editData.intervalTime" name="intervalTime" placeholder="请输入间隔时间" autocomplete="off">
+                    <div *ngIf='form.submitted && (!intervalTime.valid)' class="text-danger">间隔时间不能为空</div>
+                  </div>
+                  <div class="form-group ">
+                    <label class="control-label">排列方式：</label>
+                    <select  #select="ngModel" [(ngModel)]="editData.select" name="select" (change)="grad=select.value;page=1;this.onGroupList=gradChange(grad,this.onGroupList)">
+                      <option value="4">四宫格</option>
+                      <option value="9">九宫格</option>
+                      <option value="16">十六宫格</option>
+                    </select>
+                  </div>
+                  <div class="groupEdit">
+                    <!--设备列表-->
+                    <div class="groupEditBoxL">
+                      <div class="groupSearch">
+                        <input type="text" class="form-control search" placeholder="请输入设备名称" #box  (keyup)="searchDeviceList(box.value)">
+                      </div>
+                      <div class="list">
+                        虚拟占位设备
+                        <!--<b class="deviceAdd" (click)="addDevice(none,page,grad,list.groupContent);none=none-1"></b>-->
+                        <b class="deviceAdd" (click)="addDevice(none,page,grad,this.onGroupList);none=none-1"></b>
+                      </div>
+                      <div class="list" draggable="true" *ngFor="let listL of deviceList">
+                        {{(listL.viewId==1052||!listL.viewId)?listL.containerName:listL.containerName+'(不支持)'}}<b *ngIf="(listL.viewId==1052||!listL.viewId)" class="deviceAdd" (click)="addDevice(listL.containerId,page,grad,this.onGroupList)"></b>
+                      </div>
+                    </div>
+                    <!--已选列表-->
+                    <div id="" class="groupEditBoxR">
+                      <div class="divPage" draggable="true" *ngFor="let sub of this.onGroupList">
+                        <div *ngIf="sub.page==page">
+                          <p class="divPageTop">
+                            第{{page}}屏(共{{onGroupList.length}}屏)
+                            <b class="btn btn-primary btn-xs add" (click)="addPage('edit',onGroupList);page=onGroupList.length;"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>添加新屏</b>
+                            <b *ngIf="page>1" class="btn btn-primary btn-xs del" (click)="delPage('edit',page)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>删除此屏</b>
+                          </p>
+                          <b class="prve btn btn-xs" [ngClass]="{'pointer':page>'1','no-drop':'1'>=page}" (click)="page>1?page=page-1:''"></b>
+                          <b class="next btn btn-xs" [ngClass]="{'pointer':onGroupList.length>page,'no-drop':page>=onGroupList.length}" (click)="onGroupList.length>page?page=page+1:''"></b>
+                          <div class="list"[ngClass]="{'list4':grad=='4','list9':grad=='9','list16':grad=='16'}" draggable="true" *ngFor="let tub of sub.value;let m=index;">
+                            <p>{{sub.page}}-{{m+1}}</p>
+                            <h6 class="title" *ngIf="tub.containerId!==0">{{tub.containerName?tub.containerName:'虚拟占位设备'}}</h6>
+                            <h6 *ngIf="tub.containerId!==0" title="{{tub.location}}">{{tub.location?tub.location:''}}</h6>
+                            <h6 class="title" *ngIf="tub.containerId==0">空设备</h6>
+                            <b *ngIf="tub.containerId>0" class="btn del btn-default btn-xs" (click)="delDevice(sub.page,tub.containerId,onGroupList)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b>
+                            <b *ngIf="tub.containerId<0" class="btn del btn-default btn-xs" (click)="delDevice(sub.page,m-1000,onGroupList)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b>
+                            <b *ngIf="tub.containerId==0" class="btn del btn-default btn-xs" (click)="delDevice(sub.page,20+m,onGroupList)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin: 15px;">
+                    <div class="codeBox clearfix">
+                      <input type="submit" value="保存" class="btn" style="border-radius: 15px;background: #547bff ; color: #fff;"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+          </ul>
+
+
+          <!--TODO 添加分组不用考虑删除虚拟设备从-1开始编号，编辑中虚拟设备containerId都为-1-->
+          <!--添加分组-->
+          <div class="addForm" *ngIf="this.addgroup">
+            <form #form="ngForm" (ngSubmit)="form.form.valid && addGroup(form.value,grad,deviceListCheck);this.addgroup=false;page=1;this.mask=false;" novalidate  role="form" class="form">
+              <h3 class="formName">添加分组 <i class="formClose" (click)="this.addgroup=!this.addgroup;page=1;this.mask=false;getDeviceList();freshAdd();">X</i></h3>
+              <div class="form-group ">
+                  <label class="control-label"><i class="red">*</i>分组名称：</label>
+                  <input required type="text" #name="ngModel" [(ngModel)]="addData.name" name="name" placeholder="请输入分组名称" autocomplete="off">
+                  <div *ngIf='form.submitted && (!name.valid)' class="text-danger">分组名称不能为空</div>
+              </div>
+              <div class="form-group ">
+                  <label class="control-label"><i class="red">*</i>间隔时间：</label>
+                  <input required type="text" #intervalTime="ngModel" [(ngModel)]="addData.intervalTime" name="intervalTime" placeholder="请输入间隔时间" autocomplete="off">
+                  <div *ngIf='form.submitted && (!intervalTime.valid)' class="text-danger">间隔时间不能为空</div>
+              </div>
+              <div class="form-group ">
+                <label class="control-label"><i class="red">*</i>排列方式：</label>
+                <select  #select="ngModel" [(ngModel)]="addData.select" name="select" (change)="grad=select.value">
+                  <option selected="selected" value="4">四宫格</option>
+                  <option value="9">九宫格</option>
+                  <option value="16">十六宫格</option>
+                </select>
+              </div>
+
+              <div class="groupEdit">
+                <!--设备列表-->
+                <div class="groupEditBoxL">
+                  <div class="groupSearch">
+                    <input type="text" class="form-control search" placeholder="请设备名称" #box  (keyup)="searchDeviceList(box.value)">
+                  </div>
+                  <div class="list">
+                    虚拟占位设备
+                    <b class="deviceAdd" (click)="addDevice(none,page,grad,deviceListCheck);none=none-1"></b>
+                  </div>
+                  <div class="list" draggable="true" *ngFor="let list of deviceList">
+                    {{(list.viewId==1052||!list.viewId)?list.containerName:list.containerName+'(不支持)'}}<b *ngIf="(list.viewId==1052||!list.viewId)" class="deviceAdd" (click)="addDevice(list.containerId,page,grad,deviceListCheck)"></b>
+                  </div>
+                </div>
+                <!--已选列表-->
+                <div id="recycle" class="groupEditBoxR">
+                  <div class="divPage" draggable="true" *ngFor="let list of deviceListCheck">
+                    <div *ngIf="list.page==page">
+                      <p class="divPageTop">
+                        第{{page}}屏(共{{deviceListCheck.length}}屏)
+                        <b class="btn btn-primary btn-xs add" (click)="addPage('add',deviceListCheck);page=deviceListCheck.length;"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>添加新屏</b>
+                        <b *ngIf="page>1" class="btn btn-primary btn-xs del" (click)="delPage('add',page)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>删除此屏</b>
+                      </p>
+                      <b class="prve btn btn-xs" [ngClass]="{'pointer':page>'1','no-drop':'1'>=page}" (click)="page>1?page=page-1:''"></b>
+                      <b class="next btn btn-xs" [ngClass]="{'pointer':deviceListCheck.length>page,'no-drop':page>=deviceListCheck.length}" (click)="deviceListCheck.length>page?page=page+1:''"></b>
+                      <div class="list"[ngClass]="{'list4':grad=='4','list9':grad=='9','list16':grad=='16'}" draggable="true" *ngFor="let sub of list.value;let i=index;">
+                        <p>{{list.page}}-{{i+1}}</p>
+                        <h6 class="title">{{sub.containerName}}</h6>
+                        <h6 title="{{sub.location}}">{{sub.location?sub.location:''}}</h6>
+                        <b *ngIf="sub.containerId>0" class="btn del btn-default btn-xs" (click)="delDevice(list.page,sub.containerId,deviceListCheck)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b>
+                        <b *ngIf="sub.containerId<0" class="btn del btn-default btn-xs" (click)="delDevice(list.page,i-1000,deviceListCheck)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b>
+                        <b *ngIf="sub.containerId==0" class="btn del btn-default btn-xs" (click)="delDevice(list.page,20+i,deviceListCheck)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group " style="display:block;margin: 15px;text-align: center;">
+                <div class="codeBox clearfix">
+                  <input type="submit" value="提交" class="btn" [disabled]="!name.valid||!intervalTime.valid" style="border-radius: 15px;background: #547bff ; color: #fff;"/>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!--分页-->
+      <nav *ngIf="pageIndex&&!searchStatu" aria-label="Page navigation">
+        <ul class="pagination">
+          <li><a class="no-drop">共{{totalNums}}条</a></li>
+          <li><a [ngClass]="{'no-drop':pageIndex == '1','pointer':pageIndex > '1'}" (click)='pageIndex >1?this.getList("1"):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+          <li><a [ngClass]="{'no-drop':pageIndex == '1','pointer':pageIndex > '1'}" (click)='pageIndex >1?this.getList(page-1):""'><span aria-hidden="true">&lt;</span></a></li>
+          <li *ngIf="pageIndex>1"><a (click)='this.getList(pageIndex-1)'>{{pageIndex-1}}</a></li>
+          <li><a class="active pointer">{{pageIndex}}</a></li>
+          <li *ngIf="pageIndex<totalPages"><a (click)='this.getList(pageIndex+1)' >{{pageIndex+1}}</a></li>
+          <li><a [ngClass]="{'no-drop':pageIndex == totalPages,'pointer':pageIndex < totalPages}" (click)='pageIndex < totalPages?this.getList(pageIndex+1):""'><span aria-hidden="true">&gt; </span></a></li>
+          <li><a [ngClass]="{'no-drop':pageIndex == totalPages,'pointer':pageIndex < totalPages}" (click)='pageIndex < totalPages?this.getList(totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+          <li><a>共{{totalPages}}页</a></li>
+        </ul>
+      </nav>
+      <nav *ngIf="pageIndex&&searchStatu" aria-label="Page navigation">
+        <ul class="pagination">
+          <li><a class="no-drop">共{{totalNums}}条</a></li>
+          <li><a [ngClass]="{'no-drop':pageIndex == '1','pointer':pageIndex > '1'}" (click)='pageIndex >1?this.searchList(box.value,info,1):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+          <li><a [ngClass]="{'no-drop':pageIndex == '1','pointer':pageIndex > '1'}" (click)='pageIndex >1?this.searchList(box.value,info,pageIndex-1):""'><span aria-hidden="true"><</span></a></li>
+          <li *ngIf="pageIndex>1"><a class="pointer" (click)='this.searchList(box.value,info,pageIndex-1)'>{{pageIndex-1}}</a></li>
+          <li><a class="active pointer">{{pageIndex}}&nbsp;</a></li>
+          <li *ngIf="pageIndex<totalPages"><a class="pointer" (click)='this.searchList(box.value,info,pageIndex+1)' >{{pageIndex+1}}</a></li>
+          <li><a [ngClass]="{'no-drop':pageIndex == totalPages,'pointer':pageIndex < totalPages}" (click)='pageIndex < totalPages?this.searchList(box.value,info,pageIndex+1):""'><span aria-hidden="true">> </span></a></li>
+          <li><a [ngClass]="{'no-drop':pageIndex == totalPages,'pointer':pageIndex < totalPages}" (click)='pageIndex < totalPages?this.searchList(box.value,info,totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+          <li><a class="no-drop">共{{totalPages}}页</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </div>
+</div>
+
+<footBox></footBox>
+
+

@@ -1,0 +1,342 @@
+<headBox></headBox>
+
+
+
+<div *ngIf="this.mask" class="mask"></div>
+<div class="container-fluid row" [ngStyle]="currentStyles">
+  <div class="sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+
+  <div class="main">
+    <div class="customer">
+      <h3 class="title">客户管理</h3>
+
+      <div class="device">
+        <div class="searchBox row">
+          <p>
+            <select class="select form-control " style="width:135px;" [ngModel]="optionL" (ngModelChange)="optionL=$event;info=optionL;">
+              <option *ngFor="let item of optionList" [value]='item.name' [ngClass]="item.name">{{item.name}}</option>
+            </select>
+          </p>
+
+          <div class="col-xs-3 col-sm-3 col-md-3 col-lg-4">
+            <div class="input-group">
+              <input type="text" class="form-control search" placeholder="请输入客户账号" #box (keyup)="0" (keyup.enter)="searchList(box.value,info,1)">
+              <span class="">
+                <button class="btn btn-default searchBg" type="button" (click)=" searchList(box.value,info,1)" >查询</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="btnBox">查询结果
+          <button *ngIf="power.export" class="btn btn-lg btn-primary fff" (click)="exportData()"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>全部导出</button>
+          <button *ngIf="power.active" class="btn btn-lg btn-warning fff" (click)="batch(select,'正常')"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>批量解锁</button>
+          <button *ngIf="power.forbidden" class="btn btn-lg btn-danger" (click)="batch(select,'禁用')"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>批量锁定</button>
+          <button *ngIf="power.add&&this.cameraService.customerType=='C'" class="btn btn-lg btn-success" (click)="this.addBind=!this.addBind;this.mask=!this.mask"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>绑定客户</button>
+          <button *ngIf="power.add&&this.cameraService.customerType!=='C'" class="btn btn-lg btn-success" (click)="this.add=!this.add;this.mask=!this.mask"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>添加客户</button>
+          <button *ngIf="power.export&&this.cameraService.customerType=='C'" class="btn btn-lg btn-default" (click)="this.excel=!this.excel"><span class="glyphicon glyphicon-open" aria-hidden="true"></span>批量导入</button>
+        </div>
+
+        <div class="panel panel-default">
+          <ul *ngIf="cameraService.customerType!=='C'" class="list-group">
+            <li class="list-group-item borderBN customerListT">
+              <div><input type="checkbox" id="checkAll" [checked]="select" (click)="selectAll();" style="margin-left:30px;"> <label for="checkAll">全选</label> </div>
+              <div>客户账户</div>
+              <div>联系人</div>
+              <div>联系电话</div>
+              <div>客户状态</div>
+              <div>备注信息</div>
+              <div style="width: 15%;">操作</div>
+            </li>
+          </ul>
+          <ul *ngIf="cameraService.customerType=='C'" class="list-group">
+            <li class="list-group-item borderBN customerListT customerListTC">
+              <div><input type="checkbox" id="checkAllC" [checked]="select" (click)="selectAll();" style="margin-left:30px;"> <label for="checkAllC">全选</label> </div>
+              <div>客户账户</div>
+              <div>客户类型</div>
+              <div>联系人</div>
+              <div>联系电话</div>
+              <div>客户状态</div>
+              <div>备注信息</div>
+              <div style="width: 15%;">操作</div>
+            </li>
+          </ul>
+          <ul *ngIf="cameraService.customerType!=='C'" class="list-group customerListC">
+            <li class="list-group-item"  *ngFor="let list of customerList">
+              <div><input [value]="list.customerId" type="checkbox" [checked]="select" (change)="isChecked($event.target.checked,list.customerId);select=false;" > </div>
+              <div>{{list.customerName}}&nbsp;</div>
+              <div>{{list.linkman}}&nbsp;</div>
+              <div>{{list.contactNumber}}&nbsp;</div>
+              <div>{{list.statusCode}}&nbsp;</div>
+              <div >{{list.description}}&nbsp;</div>
+              <div style="width: 15%;">
+                <input *ngIf="power.forbidden&&list.statusCode=='正常'" class="btn btn-danger btn-xs" type="button" value="锁定" (click)="single('禁用',list.customerId)">
+                <input *ngIf="power.active&&list.statusCode=='禁用'" class="btn btn-warning fff btn-xs" type="button" value="解锁" (click)="single('正常',list.customerId)">
+                <input *ngIf="power.edit&&list.statusCode=='正常'" type="button" class="btn btn-success btn-xs" [value]="list.edt?'取消':'编辑'" (click)="list.edt=!list.edt;this.mask=!this.mask;editData.linkman=list.linkman;editData.phone=list.phone;editData.description=list.description">
+              </div>
+              <!--编辑表单-->
+              <div class="editForm" *ngIf="list.edt">
+                <form #form="ngForm" (ngSubmit)="form.form.valid&&singleEdit(form.value,list.customerId);list.edt=!list.edt;this.mask=false" novalidate  role="form" class="form">
+                  <h3 class="formName">编辑客户 <i class="formClose" (click)="list.edt=!list.edt;this.mask=!this.mask">X</i></h3>
+
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                       <label class="control-label"><i class="red">*</i>用户名称：</label>
+                       <input type="text" [value]="list.customerName" disabled autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">账户密码：</label>
+                      <input  class="btn btn-success btn-xs"  value="重置密码" (click)="resetPwd(list.customerId)" style="width:40%;line-height: 30px;margin: 0 4%;padding: 0;text-indent: 0;">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">联系人：</label>
+                      <input type="text" #linkman="ngModel" [(ngModel)]="editData.linkman" name="linkman" [value]='list.linkman' placeholder="联系人名称长度不超过8位" maxlength="8" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">联系电话：</label>
+                      <input type="text" #phone="ngModel" [(ngModel)]="editData.phone" name="phone" [value]='list.phone' autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">备注：</label>
+                      <input type="text" #description="ngModel" [(ngModel)]="editData.description" name="description" [value]='list.description' autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <input type="button" value="取消" class="btn btn-info" (click)="list.edt=!list.edt;this.mask=!this.mask"/>
+                      <input type="submit" value="提交" class="btn btn-info"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+          </ul>
+
+          <ul *ngIf="cameraService.customerType=='C'" class="list-group customerListC customerListCC">
+            <li class="list-group-item"  *ngFor="let list of customerList">
+              <div><input [value]="list.customerId" type="checkbox" [checked]="select" (change)="isChecked($event.target.checked,list.customerId);select=false;" > </div>
+              <div>{{list.customerName}}&nbsp;</div>
+              <div>{{list.roleIdArray=='[1001]'?'普通':'工长'}}&nbsp;</div>
+              <div>{{list.linkman}}&nbsp;</div>
+              <div>{{list.contactNumber}}&nbsp;</div>
+              <div>{{list.statusCode}}&nbsp;</div>
+              <div >{{list.description}}&nbsp;</div>
+              <div style="width: 15%;">
+                <input *ngIf="power.forbidden&&list.statusCode=='正常'" class="btn btn-danger btn-xs" type="button" value="锁定" (click)="single('禁用',list.customerId)">
+                <input *ngIf="power.active&&list.statusCode=='禁用'" class="btn btn-warning fff btn-xs" type="button" value="解锁" (click)="single('正常',list.customerId)">
+                <input *ngIf="power.edit&&list.statusCode=='正常'" type="button" class="btn btn-success btn-xs" [value]="list.edtc?'取消':'编辑'" (click)="list.edtc=!list.edtc;this.mask=!this.mask;addData.select=list.roleNameArray;editData.linkman=list.linkman;editData.phone=list.phone;editData.description=list.description">
+                <input type="button" class="btn btn-danger btn-xs" value="删除" (click)="customerDel(list.customerId)">
+              </div>
+              <!--C编辑表单-->
+              <div class="editForm" *ngIf="list.edtc">
+                <form #form="ngForm" (ngSubmit)="form.form.valid&&singleEdit(form.value,list.customerId);list.edtc=!list.edtc;this.mask=false" novalidate  role="form" class="form">
+                  <h3 class="formName">编辑客户 <i class="formClose" (click)="list.edtc=!list.edtc;this.mask=!this.mask">X</i></h3>
+                  <div class="form-group ">
+                    <div>
+                      <label class="control-label">客户类型：</label>
+                      <select  #select="ngModel" [(ngModel)]="addData.select" name="select" (change)="grad=select.value" style=" width: 40%; line-height: 40px; height: 40px;margin:0 4%;">
+                        <option value="1001">普通</option>
+                        <option value="1005">工长</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label"><i class="red">*</i>用户名称：</label>
+                      <input type="text" [value]="list.customerName" disabled autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">联系人：</label>
+                      <input type="text" #linkman="ngModel" [(ngModel)]="editData.linkman" name="linkman" [value]='list.linkman' placeholder="联系人名称长度不超过8位" maxlength="8" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">联系电话：</label>
+                      <input type="text" #phone="ngModel" [(ngModel)]="editData.phone" name="phone" [value]='list.phone' autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">备注：</label>
+                      <input type="text" #description="ngModel" [(ngModel)]="editData.description" name="description" [value]='list.description' autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <input type="button" value="取消" class="btn btn-info" (click)="list.edtc=!list.edtc;this.mask=!this.mask"/>
+                      <input type="submit" value="提交" class="btn btn-info"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+          </ul>
+          <!--添加客户-->
+          <div class="addForm" *ngIf="this.add">
+            <form #form="ngForm" (ngSubmit)="form.form.valid && addCustomer(form.value);this.add=!this.add;this.mask=false" novalidate  role="form" class="form">
+              <h3 class="formName">添加客户 <i class="formClose" (click)="this.add=!this.add;this.mask=!this.mask">X</i></h3>
+              <div class="form-group ">
+                <div>
+                  <label class="control-label"><i class="red">*</i>公司名称：</label>
+                  <input required type="text" #customerName="ngModel" [(ngModel)]="addData.customerName" name="customerName"  placeholder="公司名称长度不超过8位" maxlength="8" autocomplete="off">
+                  <div *ngIf='form.submitted && (!customerName.valid)' class="text-danger">公司名称不能为空</div>
+                </div>
+              </div>
+
+              <div class="form-group ">
+                <div>
+                  <label class="control-label"><i class="red">*</i>账号密码：</label>
+                  <input required type="password" #passwd="ngModel" [(ngModel)]="addData.passwd" name="passwd" placeholder="请输入密码" autocomplete="off">
+                  <div *ngIf='form.submitted && (!passwd.valid)' class="text-danger">密码不能为空</div>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label"><i class="red">*</i>联系人:</label>
+                  <input required type="text" #linkman="ngModel" [(ngModel)]="addData.linkman" name="linkman"  placeholder="联系人名称长度不超过8位"  maxlength="8" autocomplete="off">
+                  <div *ngIf='form.submitted && (!linkman.valid)' class="text-danger">联系人不能为空</div>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label"><i class="red">*</i>联系电话</label>
+                  <input required type="text" #phone="ngModel" [(ngModel)]="addData.phone" name="phone" placeholder="请输入联系电话" autocomplete="off">
+                  <div *ngIf='form.submitted && (!phone.valid)' class="text-danger">联系电话不能为空</div>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">备注：</label>
+                  <input type="text" #description="ngModel" [(ngModel)]="addData.description" name="description" placeholder="选填备注" autocomplete="off">
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <input type="button" value="取消" class="btn btn-info" (click)="this.add=!this.add;this.mask=!this.mask"/>
+                  <input type="submit" value="提交" class="btn btn-info" [disabled]="!customerName.valid||!linkman.valid||!phone.valid"/>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!--绑定客户-->
+          <div class="addForm" *ngIf="this.addBind">
+            <form #form="ngForm" (ngSubmit)="form.form.valid && bindCustomer(form.value);this.addBind=!this.addBind;this.mask=false" novalidate  role="form" class="form">
+              <h3 class="formName">绑定客户 <i class="formClose" (click)="this.addBind=!this.addBind;this.mask=!this.mask">X</i></h3>
+              <div class="form-group ">
+                <div>
+                  <label class="control-label">账号类型：</label>
+                  <select  #selectName="ngModel" [(ngModel)]="addData.selectName" name="selectName" (change)="nameType=selectName.value;isPhone=!isPhone"  style=" width: 210px; margin-left: 20px; line-height: 40px; height: 30px;">
+                    <option value="true">手机</option>
+                    <option value="false">邮箱</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div>
+                  <label class="control-label">客户类型：</label>
+                  <select  #select="ngModel" [(ngModel)]="addData.select" name="select" (change)="grad=select.value" style=" width: 210px; margin-left: 20px; line-height: 40px; height: 30px;">
+                    <option value="1001">普通</option>
+                    <option value="1005">工长</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div>
+                  <label class="control-label"><i class="red">*</i>客户账号：</label>
+                  <input required type="text" #customerName="ngModel" [(ngModel)]="addData.customerName" name="customerName" placeholder="请输入注册手机号" maxlength="8" autocomplete="off">
+                  <div *ngIf='form.submitted && (!customerName.valid)' class="text-danger">客户账号不能为空</div>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label"><i class="red">*</i>联系人:</label>
+                  <input required type="text" #linkman="ngModel" [(ngModel)]="addData.linkman" name="linkman"  placeholder="联系人名称长度不超过8位"  maxlength="8" autocomplete="off">
+                  <div *ngIf='form.submitted && (!linkman.valid)' class="text-danger">联系人不能为空</div>
+                </div>
+              </div>
+              <div *ngIf="isPhone" class="form-group">
+                <div class="codeBox clearfix">
+                  <label class="control-label">联系电话：</label>
+                  <input type="text" #phone="ngModel" [(ngModel)]="addData.phone" name="phone" placeholder="请输入联系电话" autocomplete="off" [disabled]="selectName.value">
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">备注：</label>
+                  <input type="text" #description="ngModel" [(ngModel)]="addData.description" name="description" placeholder="选填备注" autocomplete="off">
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <input type="button" value="取消" class="btn btn-info" (click)="this.addBind=!this.addBind;this.mask=!this.mask"/>
+                  <input type="submit" value="提交" class="btn btn-info" [disabled]="!customerName.valid||!linkman.valid"/>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!--导入-->
+          <div class="addForm" *ngIf="excel">
+            <form #form="ngForm" enctype="multipart/form-data" novalidate>
+              <h3 class="formName">导入客户 <i class="formClose" (click)="excel=!excel;this.mask=false">X</i></h3>
+              <input type="file"  ng2FileSelect [uploader]="uploader" (change)="selectedFileOnChanged($event)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+              <span class="btn btn-success btn-lg" (click)="exportDemo('customer')">模版下载</span>
+              <span class="btn btn-info  btn-lg" (click)="excel=!excel;this.mask=false">关闭</span>
+              <div *ngIf="this.isError==true" style="color:red"></div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <nav *ngIf="page&&!searchStatu" aria-label="Page navigation">
+        <ul class="pagination">
+          <li><a class="no-drop">共{{totalNums}}条</a></li>
+          <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getCustomerList("1"):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+          <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getCustomerList(page-1):""'><span aria-hidden="true"><</span></a></li>
+          <li *ngIf="page>1"><a class="pointer" (click)='this.getCustomerList(page-1)'>{{page-1}}</a></li>
+          <li><a class="active pointer">{{page}}&nbsp;</a></li>
+          <li *ngIf="page<totalPages"><a class="pointer" (click)='this.getCustomerList(page+1)' >{{page+1}}</a></li>
+          <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getCustomerList(page+1):""'><span aria-hidden="true">> </span></a></li>
+          <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getCustomerList(totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+          <li><a class="no-drop">共{{totalPages}}页</a></li>
+          <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.getCustomerList(jumpPage.value):""'>跳转</a></li>
+        </ul>
+      </nav>
+      <nav *ngIf="page&&searchStatu" aria-label="Page navigation">
+        <ul class="pagination">
+          <li><a class="no-drop">共{{totalNums}}条</a></li>
+          <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchList(box.value,info,1):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+          <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchList(box.value,info,page-1):""'><span aria-hidden="true"><</span></a></li>
+          <li *ngIf="page>1"><a class="pointer" (click)='this.searchList(box.value,info,page-1)'>{{page-1}}</a></li>
+          <li><a class="active pointer">{{page}}&nbsp;</a></li>
+          <li *ngIf="page<totalPages"><a class="pointer" (click)='this.searchList(box.value,info,page+1)' >{{page+1}}</a></li>
+          <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchList(box.value,info,page+1):""'><span aria-hidden="true">> </span></a></li>
+          <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchList(box.value,info,totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+          <li><a class="no-drop">共{{totalPages}}页</a></li>
+          <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.searchList(box.value,info,jumpPage.value):""'>跳转</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </div>
+</div>
+
+<footBox></footBox>
+
+
+

@@ -1,0 +1,88 @@
+<headBox></headBox>
+
+<div class="container-fluid row" [ngStyle]="currentStyles">
+  <div class="sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+  <div class="main">
+    <div class="leasedLog">
+      <h3 class="title">租用日志</h3>
+
+      <div class="device">
+        <div class="searchBox row">
+          <p class="col-xs-7 col-sm-7 col-md-7 col-lg-6">
+            <p-calendar class="calendar"  [(ngModel)]="startTime" [inline]="false" inputId="time1" [locale]="ch" dataType='string' yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd"  showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="起始时间"></p-calendar>
+            <span>至：</span>
+            <p-calendar class="calendar"  [(ngModel)]="endTime" [inline]="false" inputId="time2" [locale]="ch" dataType='string' yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="结束时间"></p-calendar>
+          </p>
+          <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+            <div class="input-group">
+              <select class="select form-control " style="height: 35px;" [ngModel]="optionL" (ngModelChange)="optionL=$event;info=optionL;">
+                <option *ngFor="let item of optionList" [value]='item.name' [ngClass]="item.name">{{item.name}}</option>
+              </select>&nbsp;
+              <input type="text" class="form-control search" placeholder="描述，结果关键字模糊搜索" #searchText>
+              <span style="margin:0 10px;"> <button class="btn btn-success searchBg" type="button" (click)=" searchLogList(startTime,endTime,info,searchText.value,1)">查询</button> </span>
+              <span> <button class="btn btn-default searchBg" type="button" (click)="getLogList(page)">清除查询!</button> </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btnBox">
+          <button class="btn btn-lg btn-primary" (click)="exportData()"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>全部导出</button>
+        </div>
+
+        <div class="panel panel-default">
+          <ul class="list-group">
+            <li class="list-group-item borderBN leasedLogListT">
+              <div>操作类型</div>
+              <div class="logL">日志描述</div>
+              <div>操作结果</div>
+              <div>操作时间</div>
+            </li>
+          </ul>
+          <ul class="list-group leasedLogListC">
+            <li class="list-group-item"  *ngFor="let list of logList">
+              <div>{{list.type}}&nbsp;</div>
+              <div class="logL">&nbsp;<span>{{list.description}}</span></div>
+              <div>{{list.result}}&nbsp;</div>
+              <div>{{list.updateTime|date:'yyyy-MM-dd'}}&nbsp;</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <nav *ngIf="page&&!searchStatu" aria-label="Page navigation">
+        <ul class="pagination">
+          <!--<li><a class="no-drop">共{{totalNums}}条</a></li>-->
+          <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getLogList("1"):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+          <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getLogList(page-1):""'><span aria-hidden="true"><</span></a></li>
+          <li *ngIf="page>1"><a class="pointer" (click)='this.getLogList(page-1)'>{{page-1}}</a></li>
+          <li><a class="active pointer">{{page}}&nbsp;</a></li>
+          <li *ngIf="page<totalPages"><a class="pointer" (click)='this.getLogList(page+1)' >{{page+1}}</a></li>
+          <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getLogList(page+1):""'><span aria-hidden="true">> </span></a></li>
+          <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getLogList(totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+          <li><a class="no-drop">共{{totalPages}}页</a></li>
+          <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.getLogList(jumpPage.value):""'>跳转</a></li>
+        </ul>
+      </nav>
+      <nav *ngIf="page&&searchStatu" aria-label="Page navigation">
+        <ul class="pagination">
+          <!--<li><a class="no-drop">共{{totalNums}}条</a></li>-->
+          <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchLogList(startTime,endTime,info,searchText.value,1):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+          <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchLogList(startTime,endTime,info,searchText.value,page-1):""'><span aria-hidden="true"><</span></a></li>
+          <li *ngIf="page>1"><a class="pointer" (click)='this.searchLogList(startTime,endTime,info,searchText.value,page-1)'>{{page-1}}</a></li>
+          <li><a class="active pointer">{{page}}&nbsp;</a></li>
+          <li *ngIf="page<totalPages"><a class="pointer" (click)='this.searchLogList(startTime,endTime,info,searchText.value,page+1)' >{{page+1}}</a></li>
+          <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchLogList(startTime,endTime,info,searchText.value,page+1):""'><span aria-hidden="true">> </span></a></li>
+          <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchLogList(startTime,endTime,info,searchText.value,totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+          <li><a class="no-drop">共{{totalPages}}页</a></li>
+          <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.searchLogList(startTime,endTime,info,searchText.value,jumpPage.value):""'>跳转</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<footBox></footBox>
+

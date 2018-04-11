@@ -1,0 +1,57 @@
+
+  <div class="login container-fluid" [ngStyle]="currentStyles">
+    <!--<img class="userImg" src='../../assets/imgs/logoBig.png' alt="">-->
+
+    <div class="loginBg" *ngIf="!userStorage">
+    <!--<div class="loginBg" >-->
+      <div class="loginTxt">
+        <p routerLink="/index"><img class="img60" src="../../assets/imgs/login_1.png" alt=""><span>工地实况管理平台</span></p>
+        <h1><img class="img60" src="../../assets/imgs/login_2.png" alt=""><span>轻松管理工程进度</span></h1>
+        <ul>
+          <li><img class="img20" src="../../assets/imgs/login_3.png" alt=""><span>施工现场直播</span></li>
+          <li><img class="img20" src="../../assets/imgs/login_4.png" alt=""><span>远程工地沟通</span></li>
+          <li><img class="img20" src="../../assets/imgs/login_5.png" alt=""><span>装修全程记录</span></li>
+          <li><img class="img20" src="../../assets/imgs/login_6.png" alt=""><span>完工过程还原</span></li>
+        </ul>
+      </div>
+      <form #form="ngForm" (ngSubmit)="form.form.valid && submit(form.value)" novalidate  role="form" class="form loginForm">
+        <h2 class="loginTit">登录</h2>
+        <div class="form-group" [ngClass]="{ 'has-error': form.submitted && !userName.valid }">
+          <div >
+            <div class="text-danger"><i *ngIf='errMsg'></i>{{errMsg?errMsg:''}}</div>
+            <input required name="userName" [(ngModel)]="user.userName" #userName="ngModel" type="text" class="form-control input" placeholder="请输入手机号或公司名称" autocomplete="off">
+            <!--<div *ngIf="form.submitted && !userName.valid" class="text-danger">手机号或用户名必须输入！</div>-->
+            <!--<div *ngIf="!isPhone" class="text-danger">手机号格式有误！</div>-->
+            <div class="text-danger"><i *ngIf='!isPhone||(form.submitted && !userName.valid)'></i>{{(form.submitted && !userName.valid)?'手机号或用户名必须输入!':''}}{{isPhone||!userName.valid?'':'手机号格式有误'}}</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div [ngClass]="{'has-error': form.submitted && !password.valid }">
+            <input required minlength="6" maxlength="12" [(ngModel)]="user.password" name="password" #password="ngModel" type="password" class="form-control input" placeholder="请输入密码" autocomplete="off">
+            <!--<div *ngIf="form.submitted && !password.valid" class="text-danger">密码必须输入,至少要6位！</div>-->
+            <div class="text-danger"><i *ngIf="form.submitted && !password.valid"></i>{{form.submitted && !password.valid?'密码必须输入,至少要6位！':''}}</div>
+          </div>
+        </div>
+        <div class="form-group ">
+          <div class="codeBox clearfix">
+            <input class="pull-left code" type="text" name="code" [(ngModel)]="user.code" #code="ngModel" placeholder="请输入验证码" autocomplete="off">
+            <input  class="code1 pull-right" type="button" name="code1" value={{vode}}  (click)="refresh()">
+          </div>
+          <!--<div *ngIf='form.submitted &&!(vode==user.code)' class="text-danger">验证码有误</div>-->
+          <div class="text-danger"><i *ngIf="form.submitted &&!(vode==user.code)"></i>{{form.submitted &&!(vode==user.code)?'验证码有误':''}}</div>
+
+        </div>
+        <div class="form-group ">
+            <input type="submit" value="登录" class="btn btn-info"  [disabled]="!userName.valid||!password.valid"/>
+        </div>
+      </form>
+      <div class="loginFoot">
+        ©2016-2017  北京华迪世通物联科技有限公司版权所有  京ICP备17008932号-1
+      </div>
+    </div>
+    <div class="rowM" *ngIf="userStorage">
+    <!--<div class="rowM">-->
+      <div>您已经登录</div>
+      <div><a routerLink="/group/groupIndex">去分组管理看看</a></div>
+    </div>
+  </div>

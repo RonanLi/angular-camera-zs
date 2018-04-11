@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HeadComponent } from '../head/head.component';
-import htmlString = JQuery.htmlString;
+import { CameraService } from '../services/camera.service';
 
 @Component({
   selector: 'app-treeview',
@@ -8,5 +7,6 @@ import htmlString = JQuery.htmlString;
   styleUrls: ['./treeview.component.css']
 })
 export class TreeviewComponent implements OnInit {
+  constructor(public cameraService: CameraService) { }
   ngOnInit() { }
 }

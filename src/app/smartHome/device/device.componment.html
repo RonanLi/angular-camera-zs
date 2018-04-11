@@ -1,0 +1,875 @@
+<headBox></headBox>
+<div *ngIf='this.mask'class="mask"></div>
+
+<div class="container-fluid row" [ngStyle]="currentStyles">
+  <div class=" sidebar">
+    <app-treeview></app-treeview>
+
+  </div>
+  <div class=" main">
+    <div class="deviceGL">
+      <h3 class="title">设备管理</h3>
+      <!--A类-->
+      <div  *ngIf='this.img' class="imgBig">
+        <p>设备分享二维码<span (click)="this.img=false">X</span><a href="{{this.img}}" download="二维码" target="_blank">下载 </a> </p>
+        <img class="big" src="{{this.img}}" alt="二维码">
+      </div>
+
+      <div *ngIf="this.cameraService.customerType=='A'" class="devic">
+        <div class="searchBox row">
+          <p class="col-xs-7 col-sm-7 col-md-6 col-lg-8">
+            <select class="select form-control" style="width:135px;" [ngModel]="optionL2" (ngModelChange)="optionL2=$event;this.info=optionL2">
+              <option *ngFor="let item of optionList1.data2" [value]='item.name'>{{item.name}}</option>
+            </select>
+            <span>开始时间：</span>
+            <p-calendar class="devDate" [(ngModel)]="endTimeA1" [inline]="false" inputId="end1" [locale]="ch" dataType='string' yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="开始时间"></p-calendar>
+            <span>结束时间：</span>
+            <p-calendar class="devDate" [(ngModel)]="endTimeA2" [inline]="false" inputId="end2" [locale]="ch" dataType='string' yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="结束时间"></p-calendar>
+          </p>
+          <div class="col-xs-5 col-sm-5 col-md-5 col-lg-4">
+            <div class="input-group">
+              <input type="text" class="form-control search" placeholder="客户名称/设备序号/设备批次号/备注" #box (keyup)="0" (keyup.enter)="searchList(box.value,endTimeA1,endTimeA2,this.info,null,1)">
+              <span class="">
+                <button class="btn btn-success searchBg" type="button" (click)=" searchList(box.value,endTimeA1,endTimeA2,this.info,null,1)" >查询</button>
+              </span>
+              <span class="">
+                <button class="btn btn-default searchBg" type="button" (click)="this.getDeviceList(page); " >清除查询!</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btnBox">设备列表
+          <button class="btn btn-lg btn-primary" (click)="exportER()"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>导出全部二维码</button>
+          <button class="btn btn-lg btn-warning fff" (click)="batch(select,'正常')"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>批量解锁</button>
+          <button class="btn btn-lg btn-danger" (click)="batch(select,'锁定')"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>批量锁定</button>
+          <button class="btn btn-lg btn-success" (click)="excel=!excel"><span class="glyphicon glyphicon-open" aria-hidden="true"></span>数据导入</button>
+          <button class="btn btn-lg btn-primary" (click)="exportData()"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>全部导出</button>
+          <button class="btn btn-lg btn-success" (click)="this.activate=!this.activate;this.mask=!this.mask"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>设备激活</button>
+        </div>
+        <div class="panel panel-default">
+          <ul class="list-group">
+            <li class="list-group-item borderBN deviceListT">
+              <div class="sel"><input type="checkbox" [checked]="select" id="checkAll" (click)="selectAll()"> <label for="checkAll">全选</label> </div>
+              <div class="deviceSn">设备序号</div>
+              <div>设备名称</div>
+              <div>批次号</div>
+              <div>客户账号</div>
+              <div style="width:9%">设备二维码</div>
+              <div>设备状态</div>
+              <div>出售时间</div>
+              <div class="fun">操作</div>
+            </li>
+          </ul>
+
+          <ul class="list-group deviceListC">
+            <li class="list-group-item" *ngFor="let list of deviceList">
+              <div class="sel">
+                <input type="checkbox" [checked]="select" (change)="isChecked($event.target.checked,list.deviceSn);select=false;" >
+              </div>
+              <div class="deviceSn">{{list.deviceSn}}</div>
+              <div style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; vertical-align: middle;">{{list.deviceName}}</div>
+              <div>{{list.saleBatch}}</div>
+              <div><span *ngFor="let sub of list.childrenList">{{sub.customerName}}</span></div>
+              <div style="width:9%">
+                <img class="small" src="../../../assets/imgs/qrcode.jpg" (click)="erImg(list.containerId )" alt="">
+              </div>
+              <div>{{list.statusCode}}&nbsp;</div>
+              <div>{{list.updateTime|date:'yyyy-MM-dd'}}&nbsp;</div>
+              <div class="fun">
+                <input type="button" class="btn btn-warning fff btn-xs" value="回收" (click)="recycle(list.deviceSn)">
+                <input *ngIf="list.statusCode=='正常'" type="button" class="btn btn-danger btn-xs" value="锁定" (click)="singleBatch('锁定',list.deviceSn)">
+                <input *ngIf="list.statusCode=='锁定'" type="button" class="btn btn-success btn-xs" value="解锁" (click)="singleBatch('正常',list.deviceSn)">
+              </div>
+            </li>
+          </ul>
+          <!--设备激活-->
+          <div class="addForm" *ngIf="this.activate">
+            <form #form="ngForm" (ngSubmit)="form.form.valid && deviceToAc(form.value);this.activate=!this.activate;this.mask=false" novalidate  role="form" class="form">
+              <h3 class="formName">设备激活 <i class="formClose" (click)="this.activate=!this.activate;this.mask=!this.mask">X</i></h3>
+              <div class="form-group ">
+                <div>
+                  <label class="control-label"><i class="red">*</i>设备型号：</label>
+                  <select required class="form-control couSec" #deviceMode="ngModel" [(ngModel)]="acData.deviceMode" name="deviceMode" (change)="isYs=deviceMode.value"  autocomplete="off">
+                    <option selected  disabled  value="" >请选择型号</option>
+                    <option *ngFor='let list of deviceModeArr' [value]="list.value">{{list.name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div>
+                  <label class="control-label"><i class="red">*</i>客户账号：</label>
+                  <select required class="form-control couSec" #customer="ngModel" [(ngModel)]="acData.customer" name="customer" autocomplete="off">
+                    <option selected  disabled  value='' >请选择客户</option>
+                    <option *ngFor='let list of customerArr' [value]="list.customerName">{{list.customerName}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div>
+                  <label class="control-label"><i class="red">*</i>设备序列号：</label>
+                  <input required type="text" #deviceSn="ngModel" [(ngModel)]="acData.deviceSn" name="deviceSn"  placeholder="序列号长度不超过20位" maxlength="20" autocomplete="off">
+                  <div *ngIf='form.submitted && (!deviceSn.valid)' class="text-danger">设备序列号不能为空</div>
+                </div>
+              </div>
+              <div *ngIf='isYs=="HUADI:VCW002"' class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">接入端口：</label>
+                  <input type="text" #port="ngModel" [(ngModel)]="acData.port" name="port" placeholder="请输入接入端口" autocomplete="off">
+                </div>
+              </div>
+              <div *ngIf='isYs=="HUADI:VCW002"' class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">接入用户：</label>
+                  <input type="text" #user="ngModel" [(ngModel)]="acData.user" name="user" placeholder="请输入接入用户" autocomplete="off">
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">接入密码：</label>
+                  <input type="password" #pwd="ngModel" [(ngModel)]="acData.pwd" name="pwd" placeholder="密码长度至少6位，默认888888" minlength="6" autocomplete="off">
+                  <div *ngIf='acData.pwd.length<6' class="text-danger" style="float: right;width: 62%;font-size: 12px;">接入密码长度不能小于6位</div>
+                </div>
+              </div>
+              <div *ngIf='isYs!=="HUADI:VCW002"' class="form-group">
+                <div class="codeBox clearfix">
+                  <label class="control-label">设备验证码：</label>
+                  <input type="text" #code="ngModel" [(ngModel)]="acData.code" name="code" placeholder="请输入设备验证码" autocomplete="off">
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">备注：</label>
+                  <input type="text" #description="ngModel" [(ngModel)]="acData.description" name="description" placeholder="选填备注" autocomplete="off">
+                </div>
+              </div>
+              <div *ngIf='isYs!=="HUADI:VCW002"' class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label"><i class="red">*</i>激活方式：</label>
+                  <label class="lab" *ngFor="let item of isNetArr" style="width: 95px;margin:0;"><input style="width: 15px;height:15px;" type="radio" #isNet="ngModel" [(ngModel)]="acData.isNet" name="isNet"  [value]="item.value">{{item.name}} </label>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <input type="button" value="取消" class="btn btn-info" (click)="this.activate=!this.activate;this.mask=!this.mask"/>
+                  <input type="submit" value="提交" class="btn btn-info" [disabled]="!deviceSn.valid||customer.valid==''||deviceMode.valid==''"/>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!--导入-->
+          <div class="addForm" *ngIf="excel">
+            <form #form="ngForm" enctype="multipart/form-data" novalidate>
+              <h3 class="formName">导入设备<i class="formClose" (click)="excel=!excel;this.mask=false">X</i></h3>
+              <input type="file"  ng2FileSelect [uploader]="uploader" (change)="selectedFileOnChanged($event)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+              <span class="btn btn-success btn-lg" (click)="exportDemo('device')">模版下载</span>
+              <span class="btn btn-info btn-lg" (click)="excel=!excel;this.mask=false">关闭</span>
+            </form>
+          </div>
+        </div>
+
+        <nav *ngIf="page&&!searchStatu" aria-label="Page navigation">
+          <ul class="pagination">
+            <li><a class="no-drop">共{{totalNums}}条</a></li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getDeviceList("1"):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getDeviceList(page-1):""'><span aria-hidden="true"><</span></a></li>
+            <li *ngIf="page>1"><a class="pointer" (click)='this.getDeviceList(page-1)'>{{page-1}}</a></li>
+            <li><a class="active pointer">{{page}}&nbsp;</a></li>
+            <li *ngIf="page<totalPages"><a class="pointer" (click)='this.getDeviceList(page+1)' >{{page+1}}</a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getDeviceList(page+1):""'><span aria-hidden="true">> </span></a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getDeviceList(totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+            <li><a class="no-drop">共{{totalPages}}页</a></li>
+            <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.getDeviceList(jumpPage.value):""'>跳转</a></li>
+          </ul>
+        </nav>
+        <nav *ngIf="page&&searchStatu" aria-label="Page navigation">
+          <ul class="pagination">
+            <li><a class="no-drop">共{{totalNums}}条</a></li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchList(box.value,endTimeA1,endTimeA2,this.info,null,1):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchList(box.value,endTimeA1,endTimeA2,this.info,null,page-1):""'><span aria-hidden="true"><</span></a></li>
+            <li *ngIf="page>1"><a class="pointer" (click)='this.searchList(box.value,endTimeA1,endTimeA2,this.info,null,page-1)'>{{page-1}}</a></li>
+            <li><a class="active pointer">{{page}}&nbsp;</a></li>
+            <li *ngIf="page<totalPages"><a class="pointer" (click)='this.searchList(box.value,endTimeA1,endTimeA2,this.info,null,page+1)' >{{page+1}}</a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchList(box.value,endTimeA1,endTimeA2,this.info,null,page+1):""'><span aria-hidden="true">> </span></a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchList(box.value,endTimeA1,endTimeA2,this.info,null,totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+            <li><a class="no-drop">共{{totalPages}}页</a></li>
+            <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.searchList(box.value,endTimeA1,endTimeA2,this.info,null,jumpPage.value):""'>跳转</a></li>
+          </ul>
+        </nav>
+
+      </div>
+
+      <!--B类 -->
+
+      <div *ngIf="this.cameraService.customerType=='B'" class="devic">
+        <div class="searchBox row">
+
+          <p class="col-xs-7 col-sm-7 col-md-6 col-lg-8">
+            <select class="select form-control" style="width:135px;" [ngModel]="optionL2" (ngModelChange)="optionL2=$event;this.info=optionL2">
+              <option *ngFor="let item of optionList.data2" [value]='item.name'>{{item.name}}</option>
+            </select>
+            <span>授权开始时间：</span>
+            <p-calendar class="devDate" [(ngModel)]="endTime1" [inline]="false" inputId="end1" [locale]="ch" dataType='string' yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="授权结束时间"></p-calendar>
+            <span>授权结束时间：</span>
+            <p-calendar class="devDate" [(ngModel)]="endTime2" [inline]="false" inputId="end2" [locale]="ch" dataType='string' yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="授权结束时间"></p-calendar>
+          </p>
+          <div class="col-xs-5 col-sm-5 col-md-5 col-lg-4">
+            <div class="input-group">
+              <input type="text" class="form-control search" placeholder="客户名称/设备序列号/设备批次号/备注" #box (keyup)="0" (keyup.enter)="searchList(box.value,endTime1,endTime2,this.info,null,1)">
+              <span class="">
+                <button class="btn btn-success searchBg" type="button" (click)=" searchList(box.value,endTime1,endTime2,this.info,null,1)" >查询</button>
+              </span>
+              <span class="">
+                <button class="btn btn-default searchBg" type="button" (click)="this.getDeviceList(page); " >清除查询!</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btnBox">设备列表
+          <button *ngIf="power.export" class="btn btn-lg btn-primary" (click)="exportData()"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>全部导出</button>
+
+          <button *ngIf="power.active&&!empowerBatch"class="btn btn-lg btn-success" (click)="isEmpowerList('锁定',1);empowerBatch=true;empowerBatch1=false;empowerEdit=false;empowerShare=false;empower=false;select=false;this.obj=[]">可批量解锁</button>
+          <button *ngIf="power.active&&empowerBatch" class="btn btn-lg btn-warning fff" (click)="batch(select,'正常');empowerBatch=false;"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>批量解锁</button>
+
+          <button *ngIf="power.forbidden&&!empowerBatch1" class="btn btn-lg btn-success" (click)="isEmpowerList('正常',1);empowerBatch1=true;empowerBatch=false;empowerEdit=false;empowerShare=false;empower=false;select=false;this.obj=[]">可批量锁定</button>
+          <button *ngIf="power.forbidden&&empowerBatch1" class="btn btn-lg btn-danger" (click)="batch(select,'锁定');empowerBatch1=false;"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>批量锁定</button>
+
+          <button *ngIf="power.edit&&!empowerEdit" class="btn btn-lg btn-info" (click)="empowerList('编辑',1);empowerEdit=true;empowerShare=false;empower=false;select=false;empowerBatch=false;empowerBatch1=false;this.obj=[]">可批量编辑数据</button>
+          <button *ngIf="power.edit&&empowerEdit" class="btn btn-lg btn-warning fff" (click)="alertEdit()"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>批量编辑</button>
+
+          <button *ngIf="power.authorize&&!empower" class="btn btn-lg btn-info" (click)="empowerList('授权',1);empower=true;empowerShare=false;empowerEdit=false;select=false;empowerBatch=false;empowerBatch1=false;this.obj=[]">可批量授权</button>
+          <button *ngIf="power.authorize&&empower" class="btn btn-lg btn-warning fff" (click)="alertGive();"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>批量授权</button>
+
+          <button *ngIf="power.authorize" class="btn btn-lg btn-info" (click)="deletes(select)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>批量取消授权</button>
+          <button class="btn btn-lg btn-default" (click)="getDeviceList(page);empowerShare=false;empower=false;empowerEdit=false;select=false;this.obj=[]"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>数据刷新</button>
+        </div>
+
+
+
+        <div class="panel panel-default">
+          <ul class="list-group">
+            <li class="list-group-item borderBN deviceListT deviceListCD">
+              <div class="sel"><input type="checkbox" id="checkAllB" [checked]="select" (click)="selectAll();"> <label for="checkAllB">全选</label> </div>
+              <div class="deviceSn">设备序号</div>
+              <div class="deviceSn">设备批次号</div>
+              <div>管理账号</div>
+              <div class="longDiv">客户账号</div>
+              <div>授权到期</div>
+              <div class="short">设备状态</div>
+              <div class="fun">操作</div>
+            </li>
+          </ul>
+          <ul class="list-group deviceListC deviceListCD">
+            <li class="list-group-item" *ngFor="let list of deviceList">
+              <!--编辑表单-->
+              <div class="editForm" *ngIf="list.edt">
+                <form #form="ngForm" (ngSubmit)="form.form.valid && singleBEdit(form.value,list.childrenList[0].containerId,list.childrenList[0].startTime);list.edt=false;this.mask=false" novalidate  role="form" class="form">
+                  <h3 class="formName">编辑信息<i class="formClose" (click)="list.edt=false;this.mask=false">X</i></h3>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">设备序号：</label>
+                      <input type="text" name="deviceSn" value={{list.deviceSn}} disabled>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">设备名称：</label>
+                      <input type="text" name="containerName" value={{list.containerName}} disabled="true">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">管理账号：</label>
+                      <input type="text" name="permissionType" value={{list.customerName}} disabled>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label"><i class="red">*</i>设备租用时间：</label>
+                      <input type="text"  #startTime="ngModel" [(ngModel)]="editData.startTime" name="startTime"  [value]="list.childrenList[0].startTime|date:'yyyy-MM-dd'" disabled>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">&nbsp;</label>
+                      <p-calendar class="Btime" [(ngModel)]="editData.endTime" name="endTime" dataType='string' [inline]="false" inputId="endTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="原结束日期{{list.childrenList[0].endTime|date:'yyyy-MM-dd'}}"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">描述信息：</label>
+                      <input type="text" #description="ngModel" [(ngModel)]="editData.description" name="description" value={{list.description}} autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <input type="button" value="取消" class="btn btn-info" (click)="list.edt=false;this.mask=false"/>
+                      <input type="submit" value="提交" class="btn btn-info"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!--授权表单-->
+              <div class="editForm" *ngIf="list.give">
+                <form #form="ngForm" (ngSubmit)="form.form.valid && toGive(form.value,list.containerId,editData.startTime,editData.endTime);list.give=false;this.mask=false" novalidate  role="form" class="form">
+                  <h3 class="formName">添加授权<i class="formClose" (click)="list.give=false;this.mask=false">X</i></h3>
+
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label"><i class="red">*</i>设备授权：</label>
+                      <select class="form-control" #select="ngModel" [(ngModel)]="editData.select" name="select" style="width:40%; margin: 0 4%;">
+                        <option selected="selected" value="">请选择客户账号</option>
+                        <option *ngFor='let list of shareList' [value]="list.customerId">{{list.customerName}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label"><i class="red">*</i>开始日期：</label>
+                      <p-calendar class="time" [(ngModel)]="editData.startTime" name="shareSTime" dataType='string' [inline]="false" inputId="startTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="起始日期"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">结束日期：</label>
+                      <p-calendar class="time" [(ngModel)]="editData.endTime" name="shareETime" dataType='string' [inline]="false" inputId="endTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="结束日期可以为空"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <input type="button" value="取消" class="btn btn-info" (click)="list.give=false;this.mask=false"/>
+                      <input type="submit" value="提交" class="btn btn-info"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="sel">
+                <input [value]="list.containerId" type="checkbox" [checked]="select" (change)="isChecked($event.target.checked,list.containerId);select=false;" >
+              </div>
+              <div class="deviceSn">{{list.deviceSn}}</div>
+              <div class="deviceSn">{{list.saleBatch}}&nbsp;</div>
+              <div>{{list.customerName}}&nbsp;</div>
+              <div class="longDiv">&nbsp;
+                <span *ngFor='let sub of list.childrenList'>{{sub.customerName}}</span>
+              </div>
+              <div>&nbsp;
+                <span *ngFor='let sub of list.childrenList;'>{{sub.endTime?(sub.endTime|date:'yyyy-MM-dd'):'无'}}</span>
+              </div>
+              <div class="short">{{list.statusCode}}</div>
+
+              <div class="fun">
+                <input *ngIf='list.childrenList&&list.statusCode=="正常"' type="button" class="btn btn-success btn-xs" value="取消授权" (click)="singleDelete(list.childrenList[0].containerId);">
+                <input *ngIf='!list.childrenList&&list.statusCode=="正常"' type="button" class="btn btn-info btn-xs" value="授权" (click)="list.give=!list.give;this.mask=!this.mask">
+                <input *ngIf="list.childrenList&&list.statusCode=='正常'" type="button" class="btn btn-danger btn-xs" value="锁定" (click)="singleBatch('锁定',list.containerId)">
+                <input *ngIf="list.statusCode=='锁定'" type="button" class="btn btn-primary btn-xs" value="解锁" (click)="singleBatch('正常',list.containerId)">
+                <input *ngIf='list.childrenList&&list.statusCode=="正常"' type="button" class="btn btn-warning fff btn-xs" value="{{this.edt?'取消':'编辑'}}" (click)="list.edt=!list.edt;this.mask=!this.mask;timeTo(list.childrenList[0].endTime);timeToS(list.childrenList[0].startTime)">
+              </div>
+            </li>
+          </ul>
+
+          <!--批量授权表单-->
+          <div class="addForm" *ngIf="this.give">
+            <form #form="ngForm" (ngSubmit)="form.form.valid && toGives(select,form.value,editData.startTime,editData.endTime);this.give=false;empower=!empower;this.mask=false" novalidate  role="form" class="form">
+              <h3 class="formName">批量授权<i class="formClose" (click)="this.give=!this.give;this.mask=false">X</i></h3>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label"><i class="red">*</i>设备授权：</label>
+                  <select  class="form-control" #select="ngModel" [(ngModel)]="editData.select" name="select">
+                    <option selected="true" value="">请选择客户账号</option>
+                    <option *ngFor='let list of shareList' [value]="list.customerId">{{list.customerName}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label"><i class="red">*</i>开始日期：</label>
+                  <p-calendar class="time" [(ngModel)]="editData.startTime" name="shareSTime" dataType='string' [inline]="false" inputId="startTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="起始日期"></p-calendar>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">结束日期：</label>
+                  <p-calendar class="time" [(ngModel)]="editData.endTime" name="shareETime" dataType='string' [inline]="false" inputId="endTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="结束日期可以为空"></p-calendar>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <input type="button" value="取消" class="btn btn-info" (click)="this.give=!this.give;this.mask=false"/>
+                  <input type="submit" value="提交" class="btn btn-info"/>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!--批量编辑表单-->
+          <div class="addForm" *ngIf="this.edit">
+            <form #form="ngForm" (ngSubmit)="form.form.valid && toEdit(select,form.value,editData.endTime);this.edit=false;this.give=false;this.mask=false;select=false;empowerEdit=false" novalidate  role="form" class="form">
+              <h3 class="formName">批量编辑<i class="formClose" (click)="this.edit=!this.edit;this.mask=false">X</i></h3>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">租用设备时间：</label>
+                  <p-calendar class="time" [(ngModel)]="editData.endTime" name="shareETime" dataType='string' [inline]="false" inputId="endTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="结束日期："></p-calendar>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <input type="button" value="取消" class="btn btn-info" (click)="this.edit=!this.edit;this.mask=false"/>
+                  <input type="submit" value="提交" class="btn btn-info"/>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!--导入-->
+          <div class="addForm" *ngIf="excel">
+            <form #form="ngForm" enctype="multipart/form-data" novalidate>
+              <h3 class="formName">导入设备<i class="formClose" (click)="excel=!excel;this.mask=false">X</i></h3>
+              <input type="file"  ng2FileSelect [uploader]="uploader" (change)="selectedFileOnChanged($event)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+              <span class="btn btn-success  btn-lg" (click)="exportDemo('device')">模版下载</span>
+              <span class="btn btn-info btn-lg" (click)="excel=!excel;this.mask=false">关闭</span>
+            </form>
+          </div>
+
+        </div>
+
+        <nav *ngIf="page&&!searchStatu&&!batchStatu" aria-label="Page navigation">
+          <ul class="pagination">
+            <li><a class="no-drop">共{{totalNums}}条</a></li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getDeviceList("1"):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getDeviceList(page-1):""'><span aria-hidden="true"><</span></a></li>
+            <li *ngIf="page>1"><a class="pointer" (click)='this.getDeviceList(page-1)'>{{page-1}}</a></li>
+            <li><a class="active pointer">{{page}}&nbsp;</a></li>
+            <li *ngIf="page<totalPages"><a class="pointer" (click)='this.getDeviceList(page+1)' >{{page+1}}</a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getDeviceList(page+1):""'><span aria-hidden="true">> </span></a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getDeviceList(totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+            <li><a class="no-drop">共{{totalPages}}页</a></li>
+            <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.getDeviceList(jumpPage.value):""'>跳转</a></li>
+          </ul>
+        </nav>
+
+        <nav *ngIf="page&&searchStatu" aria-label="Page navigation">
+          <ul class="pagination">
+            <li><a class="no-drop">共{{totalNums}}条</a></li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchList(box.value,endTime1,endTime2,this.info,null,1):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchList(box.value,endTime1,endTime2,this.info,null,page-1):""'><span aria-hidden="true"><</span></a></li>
+            <li *ngIf="page>1"><a class="pointer" (click)='this.searchList(box.value,endTime1,endTime2,this.info,null,page-1)'>{{page-1}}</a></li>
+            <li><a class="active pointer">{{page}}&nbsp;</a></li>
+            <li *ngIf="page<totalPages"><a class="pointer" (click)='this.searchList(box.value,endTime1,endTime2,this.info,null,page+1)' >{{page+1}}</a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchList(box.value,endTime1,endTime2,this.info,null,page+1):""'><span aria-hidden="true">> </span></a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchList(box.value,endTime1,endTime2,this.info,null,totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+            <li><a class="no-drop">共{{totalPages}}页</a></li>
+            <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.searchList(box.value,endTime1,endTime2,this.info,null,jumpPage.value):""'>跳转</a></li>
+          </ul>
+        </nav>
+
+        <nav *ngIf="page&&batchStatu" aria-label="Page navigation">
+          <ul class="pagination">
+            <li><a class="no-drop">共{{totalNums}}条</a></li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.isEmpowerList(batchType,1):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.isEmpowerList(batchType,page-1):""'><span aria-hidden="true"><</span></a></li>
+            <li *ngIf="page>1"><a class="pointer" (click)='this.isEmpowerList(batchType,page-1)'>{{page-1}}</a></li>
+            <li><a class="active pointer">{{page}}&nbsp;</a></li>
+            <li *ngIf="page<totalPages"><a class="pointer" (click)='this.isEmpowerList(batchType,page+1)' >{{page+1}}</a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.isEmpowerList(batchType,page+1):""'><span aria-hidden="true">> </span></a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.isEmpowerList(batchType,totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+            <li><a class="no-drop">共{{totalPages}}页</a></li>
+            <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.isEmpowerList(batchType,jumpPage.value):""'>跳转</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!--C类-->
+
+      <div *ngIf="this.cameraService.customerType=='C'" class="devic">
+        <div class="searchBox row">
+
+          <p class="col-xs-7 col-sm-7 col-md-6 col-lg-8">
+            <select class="select form-control" style="width:135px;" [ngModel]="optionL2" (ngModelChange)="optionL2=$event;this.info=optionL2">
+              <option *ngFor="let item of optionList.data2" [value]='item.name'>{{item.name}}</option>
+            </select>
+            <span>租用结束时间：</span>
+            <p-calendar class="devDate" [(ngModel)]="endTime1" [inline]="false" inputId="end1" [locale]="ch" dataType='string' yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="租用结束时间"></p-calendar>
+            <span>分享结束时间：</span>
+            <p-calendar class="devDate" [(ngModel)]="endTime2" [inline]="false" inputId="end2" [locale]="ch" dataType='string' yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="分享结束时间"></p-calendar>
+          </p>
+          <div class="col-xs-5 col-sm-5 col-md-5 col-lg-4">
+            <div class="input-group">
+              <input type="text" class="form-control search" placeholder="客户名称/设备序列号/设备批次号/备注" #box (keyup)="0" (keyup.enter)="searchList(box.value,endTime1,endTime2,this.info,null,1)">
+              <span class="">
+                <button class="btn btn-success searchBg" type="button" (click)=" searchList(box.value,endTime1,endTime2,this.info,null,1)" >查询</button>
+              </span>
+              <span class="">
+                <button class="btn btn-default searchBg" type="button" (click)="this.getDeviceList(page); " >清除查询!</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btnBox">设备列表
+          <button *ngIf="power.export" class="btn btn-lg btn-primary" (click)="exportData()"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>全部导出</button>
+
+          <button *ngIf="power.active&&!empowerBatch" class="btn btn-lg btn-success" (click)="isEmpowerList('锁定',1);empowerBatch=true;empowerBatch1=false;empowerEdit=false;empowerShare=false;empower=false;select=false;;obj=[]">可批量解锁</button>
+          <button *ngIf="power.active&&empowerBatch" class="btn btn-lg btn-warning fff" (click)="batch(select,'正常');empowerBatch=false;"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>批量解锁</button>
+
+          <button *ngIf="power.forbidden&&!empowerBatch1" class="btn btn-lg btn-success" (click)="isEmpowerList('正常',1);empowerBatch1=true;empowerBatch=false;empowerEdit=false;empowerShare=false;empower=false;select=false;obj=[]">可批量锁定</button>
+          <button *ngIf="power.forbidden&&empowerBatch1" class="btn btn-lg btn-danger" (click)="batch(select,'锁定');empowerBatch1=false;"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>批量锁定</button>
+
+          <button *ngIf="power.authorize&&!empower" class="btn btn-lg btn-info" (click)="empowerList('授权',1);empower=true;empowerShare=false;empowerEdit=false;empowerBatch=false;select=false;obj=[]">可批量授权</button>
+          <button *ngIf="power.authorize&&empower" class="btn btn-lg btn-warning fff" (click)="alertGive();"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>批量授权</button>
+
+          <button *ngIf="power.share" class="btn btn-lg btn-info" (click)="alertObj();"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{this.shareForm?'取消操作':'批量分享'}}</button>
+
+          <button class="btn btn-lg btn-default" (click)="getDeviceList(page);empowerShare=false;empower=false;empowerEdit=false;select=false"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>数据刷新</button>
+        </div>
+
+        <div class="panel panel-default">
+          <ul class="list-group">
+            <li class="list-group-item borderBN deviceListT">
+              <div class="sel"><input type="checkbox" id="checkAllC" [checked]="select" (click)="selectAll();"> <label for="checkAllC">全选</label> </div>
+              <div class="deviceSn" style="width:15%">设备序号</div>
+              <div>设备名称</div>
+              <div>管理账号</div>
+              <div>客户账号</div>
+              <div class="longDiv" style="width:25%">设备安装位置</div>
+              <!--<div>最近分享到期</div>-->
+              <div class="short">状态</div>
+              <div class="fun">操作</div>
+            </li>
+          </ul>
+          <ul class="list-group deviceListC deviceListCB">
+            <li class="list-group-item" *ngFor="let list of deviceList">
+              <!--编辑表单-->
+              <div class="editForm" *ngIf="list.edt">
+                <form #form="ngForm" (ngSubmit)="form.form.valid && singleEdit(form.value,subID.value,list.endTime);list.edt=false;this.mask=false" novalidate  role="form" class="form">
+                  <h3 class="formName">编辑信息 <i class="formClose" (click)="list.edt=!list.edt;this.mask=false">X</i></h3>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">设备序号：</label>
+                      <input type="text" name="deviceSn" value={{list.deviceSn}} disabled>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">设备名称：</label>
+                      <input type="text" name="containerName" value={{list.containerName}} disabled>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">管理账号：</label>
+                      <input type="text" name="permissionType" value={{list.customerName}} disabled>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label"><i class="red">*</i>开始日期：</label>
+                      <p-calendar class="time" [(ngModel)]="editData.startTime" name="startTime" dataType='string' [inline]="false" inputId="startTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="原起始日期:{{inStart.value|date:'yyyy-MM-dd'}}"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">结束日期：</label>
+                      <p-calendar class="time" [(ngModel)]="editData.endTime" name="endTime" dataType='string' [inline]="false" inputId="endTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd"showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime"  placeholder="原结束日期:{{inEnd.value|date:'yyyy-MM-dd'}}"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <input *ngIf="power.delete" type="button" style="width:24%;"  value="删除" class="btn btn-danger" (click)="singleDelete(subID.value);list.edt=false;mask=false"/>
+                      <input type="button" style="width:24%;" value="取消" class="btn btn-info" (click)="list.edt=!list.edt;this.mask=false"/>
+                      <input type="submit" style="width:24%;" value="提交" class="btn btn-info" [disabled]=""/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!--修改名称表单-->
+              <div class="editForm" *ngIf="list.editName">
+                <form #form="ngForm" (ngSubmit)="form.form.valid && editDeviceName(form.value,list.containerId);list.editName=false;this.mask=false" novalidate  role="form" class="form">
+                  <h3 class="formName">修改名称 <i class="formClose" (click)="list.editName=false;this.mask=false">X</i></h3>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">设备名称：</label>
+                      <input required type="text" #containerName="ngModel" [(ngModel)]="editData.containerName" name="containerName" value={{list.containerName}} placeholder="设备名称最长为8个字符" maxlength="8" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <input type="button" value="取消" class="btn btn-info" (click)="list.editName=false;this.mask=false"/>
+                      <input type="submit" value="提交" class="btn btn-info" [disabled]="!containerName.valid"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!--修改位置表单-->
+              <div class="editForm" *ngIf="list.loca">
+                <form #form="ngForm" (ngSubmit)="form.form.valid && locationEdit(form.value,list.deviceSn);list.loca=false;this.mask=false" novalidate  role="form" class="form">
+                  <h3 class="formName">修改安装位置 <i class="formClose" (click)="list.loca=false;this.mask=false">X</i></h3>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">安装位置：</label>
+                      <input required type="text" #location="ngModel" [(ngModel)]="editData.location" name="location" value={{list.location}} placeholder="设备地址最长为25个字符" maxlength="25" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <input type="button" value="取消" class="btn btn-info" (click)="list.loca=false;this.mask=false"/>
+                      <input type="submit" value="提交" class="btn btn-info" [disabled]="!location.valid"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!--授权表单-->
+              <div class="editForm" *ngIf="list.give">
+                <form #form="ngForm" (ngSubmit)="form.form.valid && toGive(form.value,list.containerId,list.startTime,list.endTime);list.give=false;;this.mask=false" novalidate  role="form" class="form">
+                  <h3 class="formName">添加授权 <i class="formClose" (click)="list.give=!list.give;this.mask=false">X</i></h3>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">设备授权：</label>
+                      <select  class="form-control" #select="ngModel" [(ngModel)]="editData.select" name="select"  style="width:40%;margin:0 4%;" autocomplete="off">
+                        <option selected  disabled  value="" >请选择子账户</option>
+                        <option *ngFor='let list of giveList' [value]="list.customerId">{{list.linkman?list.linkman:list.customerName}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <input type="button" value="取消" class="btn btn-info" (click)="list.give=!list.give;this.mask=false"/>
+                      <input type="submit" value="提交" class="btn btn-info"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!--分享表单-->
+              <div class="editForm" *ngIf="list.share">
+                <form #form="ngForm" (ngSubmit)="form.form.valid && toShares(form.value,list.containerId,list.endTime);list.share=false;this.mask=false" novalidate  role="form" class="form">
+                  <h3 class="formName">添加分享 <i class="formClose" (click)="list.share=!list.share;singleShareList=[];this.mask=false">X</i></h3>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">设备序列号：</label>
+                      <input type="text" disabled value="{{list.deviceSn}}">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">设备名称：</label>
+                      <input type="text" disabled value="{{list.containerName}}">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">管理账号：</label>
+                      <input type="text" disabled value="{{list.customerName}}">
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label"><i class="red">*</i>选择分享账号：</label>
+                      <div class="labBox">
+                        <!--<label class="lab" *ngFor="let items of shareList"><input type="checkbox" #share="ngModel" [(ngModel)]="editData.share" name="share"  [value]="items.customerId">{{items.customerName}}</label>-->
+                        <label class="lab" *ngFor="let items of shareList">
+                          <input type="checkbox" name="share"  [value]="items.customerId" (change)="isCheckedShare($event.target.checked,items.customerId);">{{items.linkman?items.linkman:items.customerName}}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label"><i class="red">*</i>起始时间：</label>
+                      <p-calendar class="time" [(ngModel)]="editData.startTime" name="shareSTime" dataType='string' [inline]="false" inputId="startTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="起始日期"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <label class="control-label">结束时间：</label>
+                      <p-calendar class="time" [(ngModel)]="editData.endTime" name="shareETime" dataType='string' [inline]="false" inputId="endTime" [locale]="ch" yearNavigator="true" yearRange="2018:2050" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="结束日期"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <div class="codeBox clearfix">
+                      <input type="button" value="取消" class="btn btn-info" (click)="list.share=!list.share;singleShareList=[];this.mask=false"/>
+                      <input type="submit" value="提交" class="btn btn-info"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="sel">
+                  <input [value]="list.containerId" type="checkbox" [checked]="select" (change)="isChecked($event.target.checked,list.containerId);select=false;" >
+              </div>
+              <div class="deviceSn" style="width:15%"><p>
+                <img class="dateIcon" *ngIf="list.remainDays==0" src="../../../assets/imgs/overDate.png" alt="已过期"/>
+                <img class="dateIcon" *ngIf="list.remainDays>=10||list.remainDays==-1" src="../../../assets/imgs/infinite.png" alt="正常/无限期"/>
+                <!--<img class="dateIcon" *ngIf="list.remainDays>=10" src="../../../assets/imgs/inDate.png"/>-->
+                <img class="dateIcon" *ngIf="list.remainDays>0&&10>list.remainDays" src="../../../assets/imgs/tenDay.png" alt="授权小于10天"/>
+                {{list.deviceSn}}
+                <img class="dateIcon" *ngIf="list.onLine" src="../../../assets/imgs/onLine.png"/>
+                <img class="dateIcon" *ngIf="!list.onLine" src="../../../assets/imgs/unLine.png"/>
+              </p></div>
+              <!--<div>
+                {{(list.remainDays>10)?"未到期":(list.endTime|date:'yyyy-MM-dd')}}&nbsp;
+              </div>-->
+              <div>
+                <a class="pointer" style="display:inline-block;width: 100%;height:36px;line-height:36px;text-overflow: ellipsis;overflow:hidden;white-space:nowrap;text-decoration: underline;" (click)="list.editName=!list.editName;this.mask=!this.mask;editData.containerName=list.containerName">{{list.containerName}}&nbsp;</a>
+              </div>
+              <div>{{list.customerName}}&nbsp;</div>
+              <div>
+                <p *ngFor='let sub of list.childrenList' style="line-height:30px;margin: 0;">
+                  <a class="pointer" (click)="list.edt=!list.edt;subID.value=sub.containerId;inStart.value=sub.startTime;this.mask=!this.mask;timeToS(sub.startTime);timeTo(sub.endTime);" style="text-decoration: underline; ">{{sub.linkman?sub.linkman:sub.customerName}}</a>
+                </p>&nbsp;
+              </div>
+              <div class="longDiv" style="width:25%">
+                 <a class="pointer" style="display:inline-block;width: 100%;height:36px;line-height:36px;text-overflow: ellipsis;overflow:hidden;white-space:nowrap;text-decoration: underline;" (click)="list.loca=!list.loca;this.mask=!this.mask;editData.location=list.location">{{list.location?list.location:'未设置'}}</a>
+              </div>
+              <div class="short">{{list.statusCode}}</div>
+              <div class="fun">
+                <input *ngIf='power.share&&list.permissionType!=="读写"&&list.statusCode!=="禁用"' type="button" class="btn btn-info btn-xs" value="分享" (click)="list.share=!list.share;this.mask=!this.mask">
+                <input *ngIf='power.authorize&&list.permissionType=="授权"&&list.statusCode=="正常"' type="button" class="btn btn-warning fff btn-xs" value="授权" (click)="list.give=!list.give;this.mask=!this.mask;">
+                <input *ngIf="power.forbidden&&list.statusCode=='正常'&&list.permissionType!=='授权'" type="button" class="btn btn-danger btn-xs" value="锁定" (click)="singleBatch('锁定',list.containerId)">
+                <input *ngIf="power.active&&list.statusCode=='锁定'" type="button" class="btn btn-success btn-xs" value="解锁" (click)="singleBatch('正常',list.containerId)">
+                <!--生产使用-->
+                <a *ngIf='power.lookup&&!ieVersion&&list.statusCode=="正常"' href="{{list.viewId=='1052'?'http://camera.huadiot.com/video2.html?data='+cameraService.apiKey+'&m='+list.containerId :'http://video.5itianyuan.com/video1.html?deviceSn='+list.deviceSn}}" target="_blank" class="btn btn-default btn-xs">查看</a>
+                <a *ngIf='power.lookup&&ieVersion&&list.statusCode=="正常"' href="{{list.viewId=='1052'?'http://camera.huadiot.com/video2.html?data='+cameraService.apiKey+'&m='+list.containerId: 'http://video.5itianyuan.com/video1.html?deviceSn='+list.deviceSn}}" target="_blank" class="btn btn-default btn-xs" (click)="toIEdata(list.lives)">查看</a>
+              </div>
+            </li>
+          </ul>
+          <!--批量授权表单-->
+          <div class="addForm" *ngIf="this.give">
+            <form #form="ngForm" (ngSubmit)="form.form.valid && toGives(selcet,form.value,editData.startTime,editData.endTime);obj=[];this.give=false;this.mask=false;empower=false;" novalidate  role="form" class="form">
+              <h3 class="formName">批量授权 <i class="formClose" (click)="this.give=!this.give;this.mask=false">X</i></h3>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">设备授权：</label>
+                  <select  class="form-control" #select="ngModel" [(ngModel)]="editData.select" name="select" style="width:220px;height: 32px;">
+                    <option selected="true" value="">请选择子账户</option>
+                    <option *ngFor='let list of giveList' [value]="list.customerId">{{list.linkman?list.linkman:list.customerName}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <input type="button" value="取消" class="btn btn-info" (click)="this.give=!this.give;this.mask=false"/>
+                  <input type="submit" value="提交" class="btn btn-info"/>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!--批量分享表单 -->
+          <div class="addForm" *ngIf="this.shareForm">
+            <form #form="ngForm" (ngSubmit)="form.form.valid && sharesTo(select,form.value,editData.startTime,editData.endTime);this.shareForm=false;select=false;this.singleShareList=[];this.mask=false" novalidate  role="form" class="form">
+              <h3 class="formName">批量分享 <i class="formClose" (click)="this.shareForm=false;this.mask=false">X</i></h3>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">选择分享账号：</label>
+                  <div class="labBox">
+                    <!--<label class="lab" *ngFor="let items of shareList"><input type="checkbox" #share="ngModel" [(ngModel)]="editData.share" name="share"  [value]="items.customerId">{{items.customerName}}</label>-->
+                    <label class="lab" *ngFor="let items of shareList">
+                      <input type="checkbox" name="share"  [value]="items.customerId" (change)="isCheckedShare($event.target.checked,items.customerId);">{{items.linkman?items.linkman:items.customerName}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">开始日期：</label>
+                  <p-calendar class="time" [(ngModel)]="editData.startTime" name="shareSTime" dataType='string' [inline]="false" inputId="startTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="起始日期"></p-calendar>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">结束日期：</label>
+                  <p-calendar class="time" [(ngModel)]="editData.endTime" name="shareETime" dataType='string' [inline]="false" inputId="endTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="结束日期："></p-calendar>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <input type="button" value="取消" class="btn btn-info" (click)="this.shareForm=false;this.mask=false"/>
+                  <input type="submit" value="提交" class="btn btn-info"/>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!--批量编辑表单-->
+          <div class="addForm" *ngIf="this.edit">
+            <form #form="ngForm" (ngSubmit)="form.form.valid && toEdit(select,form.value,editData.endTime);obj=[];this.edit=false;this.give=false;this.mask=false" novalidate  role="form" class="form">
+              <h3 class="formName">批量编辑 <i class="formClose" (click)="this.edit=!this.edit;this.mask=false">X</i></h3>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <label class="control-label">设备分享时间：</label>
+                  <p-calendar class="time" [(ngModel)]="editData.endTime" name="shareETime" dataType='string' [inline]="false" inputId="endTime" [locale]="ch" yearNavigator="true" yearRange="2018:2038" dateFormat="yy-mm-dd" showButtonBar='true' todayButtonStyleClass="todayTime" clearButtonStyleClass="clearTime" placeholder="结束日期："></p-calendar>
+                </div>
+              </div>
+              <div class="form-group ">
+                <div class="codeBox clearfix">
+                  <input type="button" value="取消" class="btn btn-info" (click)="this.edit=!this.edit;this.mask=false"/>
+                  <input type="submit" value="提交" class="btn btn-info"/>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <nav *ngIf="page&&!searchStatu&&!batchStatu" aria-label="Page navigation">
+          <ul class="pagination">
+            <li><a class="no-drop">共{{totalNums}}条</a></li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getDeviceList("1"):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.getDeviceList(page-1):""'><span aria-hidden="true"><</span></a></li>
+            <li *ngIf="page>1"><a class="pointer" (click)='this.getDeviceList(page-1)'>{{page-1}}</a></li>
+            <li><a class="active pointer">{{page}}&nbsp;</a></li>
+            <li *ngIf="page<totalPages"><a class="pointer" (click)='this.getDeviceList(page+1)' >{{page+1}}</a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getDeviceList(page+1):""'><span aria-hidden="true">> </span></a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.getDeviceList(totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+            <li><a class="no-drop">共{{totalPages}}页</a></li>
+            <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.getDeviceList(jumpPage.value):""'>跳转</a></li>
+          </ul>
+        </nav>
+
+        <nav *ngIf="page&&searchStatu" aria-label="Page navigation">
+          <ul class="pagination">
+            <li><a class="no-drop">共{{totalNums}}条</a></li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchList(box.value,endTime1,endTime2,this.info,null,1):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.searchList(box.value,endTime1,endTime2,this.info,null,page-1):""'><span aria-hidden="true"><</span></a></li>
+            <li *ngIf="page>1"><a class="pointer" (click)='this.searchList(box.value,endTime1,endTime2,this.info,null,page-1)'>{{page-1}}</a></li>
+            <li><a class="active pointer">{{page}}&nbsp;</a></li>
+            <li *ngIf="page<totalPages"><a class="pointer" (click)='this.searchList(box.value,endTime1,endTime2,this.info,null,page+1)' >{{page+1}}</a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchList(box.value,endTime1,endTime2,this.info,null,page+1):""'><span aria-hidden="true">> </span></a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.searchList(box.value,endTime1,endTime2,this.info,null,totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+            <li><a class="no-drop">共{{totalPages}}页</a></li>
+            <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.searchList(box.value,endTime1,endTime2,this.info,null,jumpPage.value):""'>跳转</a></li>
+          </ul>
+        </nav>
+
+        <nav *ngIf="page&&batchStatu" aria-label="Page navigation">
+          <ul class="pagination">
+            <li><a class="no-drop">共{{totalNums}}条</a></li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.isEmpowerList(batchType,1):""' aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+            <li><a [ngClass]="{'no-drop':page == '1','pointer':page > '1'}" (click)='page >1?this.isEmpowerList(batchType,page-1):""'><span aria-hidden="true"><</span></a></li>
+            <li *ngIf="page>1"><a class="pointer" (click)='this.isEmpowerList(batchType,page-1)'>{{page-1}}</a></li>
+            <li><a class="active pointer">{{page}}&nbsp;</a></li>
+            <li *ngIf="page<totalPages"><a class="pointer" (click)='this.isEmpowerList(batchType,page+1)' >{{page+1}}</a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.isEmpowerList(batchType,page+1):""'><span aria-hidden="true">> </span></a></li>
+            <li><a [ngClass]="{'no-drop':page == totalPages,'pointer':page < totalPages}" (click)='page < totalPages?this.isEmpowerList(batchType,totalPages):""'  aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+            <li><a class="no-drop">共{{totalPages}}页</a></li>
+            <li><input type="text" #jumpPage ><a class="pointer" (click)='(jumpPage.value<=totalPages&&jumpPage.value>=1)?this.isEmpowerList(batchType,jumpPage.value):""'>跳转</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!--D类 查看播放视频-->
+
+      <div *ngIf="this.cameraService.customerType=='D'" class="devic">D</div>
+
+
+    </div>
+  </div>
+</div>
+<span #subID hidden>{{subID.value}}</span>
+<span #inStart hidden>{{inStart.value}}</span>
+<span #inEnd >{{inEnd.value}}</span>
+<span #insss >{{insss.value}}</span>
+
+<footBox></footBox>
+
+
