@@ -698,13 +698,13 @@
                   <input [value]="list.containerId" type="checkbox" [checked]="select" (change)="isChecked($event.target.checked,list.containerId);select=false;" >
               </div>
               <div class="deviceSn" style="width:15%"><p>
-                <img class="dateIcon" *ngIf="list.remainDays==0" src="../../../assets/imgs/overDate.png" alt="已过期"/>
-                <img class="dateIcon" *ngIf="list.remainDays>=10||list.remainDays==-1" src="../../../assets/imgs/infinite.png" alt="正常/无限期"/>
+                <img class="dateIcon" *ngIf="list.remainDays==0" src="../../../assets/imgs/overDate.png" title="已过期"/>
+                <img class="dateIcon" *ngIf="list.remainDays>=10||list.remainDays==-1" src="../../../assets/imgs/infinite.png" title="正常/无限期"/>
                 <!--<img class="dateIcon" *ngIf="list.remainDays>=10" src="../../../assets/imgs/inDate.png"/>-->
-                <img class="dateIcon" *ngIf="list.remainDays>0&&10>list.remainDays" src="../../../assets/imgs/tenDay.png" alt="授权小于10天"/>
+                <img class="dateIcon" *ngIf="list.remainDays>0&&10>list.remainDays" src="../../../assets/imgs/tenDay.png" title="授权小于10天"/>
                 {{list.deviceSn}}
-                <img class="dateIcon" *ngIf="list.onLine" src="../../../assets/imgs/onLine.png"/>
-                <img class="dateIcon" *ngIf="!list.onLine" src="../../../assets/imgs/unLine.png"/>
+                <img class="dateIcon" *ngIf="list.onLine" src="../../../assets/imgs/onLine.png" title="在线"/>
+                <img class="dateIcon" *ngIf="!list.onLine" src="../../../assets/imgs/unLine.png" title="离线"/>
               </p></div>
               <!--<div>
                 {{(list.remainDays>10)?"未到期":(list.endTime|date:'yyyy-MM-dd')}}&nbsp;
